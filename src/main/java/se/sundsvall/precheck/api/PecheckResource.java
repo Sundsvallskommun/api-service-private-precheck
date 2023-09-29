@@ -38,19 +38,15 @@ public class PecheckResource {
         @Operation(summary = "Api for checking if a partyId is eligible for applying for permit")
         @Tag(name = "precheck", description = "The precheck API for citizens and CitizenAssets")
         // API 2.xx response
-        @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PrecheckResponse.class)))
+        @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(anyOf =  {PrecheckResponse.class, })))
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema($schema = APPLICATION_PROBLEM_JSON_VALUE)))
         @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema($schema = APPLICATION_PROBLEM_JSON_VALUE)))
-        public ResponseEntity<String> CheckPermit(
-                @Parameter(name = "partyId", description = "PartyId for the citizen", example = " ") @PathVariable(name = "partyId") final String partyId,
+        public ResponseEntity<PrecheckResponse> CheckPermit(
+                @Parameter(name = "partyId", description = "PartyId for the citizen", example = "123") @Validated @PathVariable(name = "partyId") final String partyId,
                 @Parameter(name = "assetType", description = "AssetType for the citizen", example = "PARKING_PERMIT") final String assetType,
                 @Parameter(name = "municipalityId", description = "MunicipalityId for the citizen", example = "123-123-123-312") final String municipalityId
         ) {
                 LOG.info("partyId: " + partyId + " assetType: " + assetType + " municipalityId: " + municipalityId);
-                if (partyId == null || partyId.isEmpty()) {
-
-                }
-
-                return ResponseEntity.ok().body("OK");
+                return ResponseEntity.ok(PrecheckService.checkPermit(partyId, assetType, municipalityId));
         }
 }
