@@ -13,24 +13,20 @@ import java.util.List;
 
 @Service
 public class PrecheckService {
-/*
-        static String foo;
-        //spring.test.url
+        private static String citizenApi;
+        public PrecheckService(@Value("${CITIZEN_API}") String citizenApi) {
+                 this.citizenApi = citizenApi;
+         }
 
-        public PrecheckService(@Value("${aaaa}") String foo) {
-                this.foo = foo; //foo is now aaaa from .env file (After 10 minutes of debugging :) )
-        }*/
-
-
-        public static List<PrecheckResponse> checkPermit(String partyId, String assetType, String municipalityId) {
-
-                return List.of(
-                        PrecheckResponse.builder()
-                                .withAssetType(assetType)
-                                .withOrderable(true)
-                                .withReason("OK")
-                                .build()
-                );
+        public static List<PrecheckResponse> checkPermit(String partyId, String assetType, String municipalityId) { //TODO LATER: Add the real api call here
+            System.out.println("citizenApi: " + citizenApi);
+            return List.of(
+                    PrecheckResponse.builder()
+                            .withAssetType(assetType)
+                            .withOrderable(true)
+                            .withReason("OK")
+                            .build()
+            );
         }
 
 }
