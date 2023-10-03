@@ -10,7 +10,7 @@
 	<groupId>se.sundsvall</groupId>
 	<artifactId>template-spring-boot</artifactId>
 	<version>1.0</version>
-	<name>template</name>
+	<name>precheck</name>
 	<properties>
 		<!-- Pipeline properties -->
 		<docker.image.name>ms-template</docker.image.name>

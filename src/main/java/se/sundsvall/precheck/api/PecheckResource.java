@@ -20,6 +20,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import se.sundsvall.precheck.api.model.AcctivePermitsResponse;
 import se.sundsvall.precheck.api.model.List;
 import se.sundsvall.precheck.api.model.PrecheckResponse;
+import se.sundsvall.precheck.api.model.TestData;
+import se.sundsvall.precheck.service.CitizenAssetsService;
 import se.sundsvall.precheck.service.PrecheckService;
 
 import java.util.logging.Logger;
@@ -45,14 +47,14 @@ public class PecheckResource {
         @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(anyOf =  {PrecheckResponse.class, AcctivePermitsResponse.class})))
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema($schema = APPLICATION_PROBLEM_JSON_VALUE)))
         @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema($schema = APPLICATION_PROBLEM_JSON_VALUE)))
-        public ResponseEntity<Object> CheckPermit(
+        public TestData CheckPermit(
                 @Parameter(name = "partyId", description = "PartyId for the citizen", example = "123") @Validated @PathVariable(name = "partyId") final String partyId,
                 @Parameter(name = "assetType", description = "AssetType for the citizen", example = "PARKING_PERMIT") final String assetType,
                 @Parameter(name = "municipalityId", description = "MunicipalityId for the citizen", example = "123-123-123-312") final String municipalityId
         ) {
                 LOG.info("partyId: " + partyId + " assetType: " + assetType + " municipalityId: " + municipalityId);
 
-                return ok(precheckService.checkPermit(partyId, assetType, municipalityId));
+                return CitizenAssetsService.checkPermit(partyId, assetType, municipalityId);
 
         }
 }
