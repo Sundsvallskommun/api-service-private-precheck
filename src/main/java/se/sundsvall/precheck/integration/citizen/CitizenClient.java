@@ -18,7 +18,7 @@ import java.util.List;
 )
 public interface CitizenClient {
 
-    @RequestLine("GET /api")
+    @RequestLine("GET /citizen/2.0")
     TestData getTestDataJson();
 
 
