@@ -5,17 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Builder(setterPrefix = "with")
-public class AcctivePermitsResponse {
-
-    @Schema(description = "The type of asset that are acctive", example = "String")
-    private List<Permit> permits;
-
+public class PermitListResponse {
+    @Schema(description = "A list of all active permits", example = "{String, String, String}")
+    private String[] permits;
 }
-
-
-

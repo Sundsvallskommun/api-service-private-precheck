@@ -9,10 +9,20 @@ import lombok.Getter;
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Builder(setterPrefix = "with")
 public class PrecheckResponse {
+    @Schema(description = "The Status code", example = "int")
+    private int Status;
     @Schema(description = "The type of asset", example = "String")
     private String assetType;
-    @Schema(description = "Orderable", example = "Boolean")
-    private boolean orderable;
-    @Schema(description = "The reason if Orderable is false ", example = "String")
-    private String reason;
+    @Schema(description = "Order-able", example = "boolean")
+    private boolean orderable = false;
+    @Schema(description = "The reason if Orderable if false ", example = "String")
+    private String reason = "";
+
+    public PrecheckResponse from(final String assetType, final boolean orderable, final String reason) {
+        return builder()
+                .withAssetType(assetType)
+                .withOrderable(orderable)
+                .withReason(reason)
+                .build();
+    }
 }
