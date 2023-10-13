@@ -1,4 +1,6 @@
-package se.sundsvall.precheck.integration.Citizen;
+package se.sundsvall.precheck.integration.citizen;
+
+import generated.se.sundsvall.citizen.*;
 
 import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
