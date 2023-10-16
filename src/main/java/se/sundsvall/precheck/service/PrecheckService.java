@@ -17,7 +17,7 @@ public class PrecheckService {
         public PrecheckResponse checkPermit(final String personId, final String assetType, final int municipalityId){
 
                 var response = citizenClient.getCitizen(personId);
-                if(response.isPresent() == false) { //Pr nt refers to if the Optional has a value present or not
+                if(response.isEmpty()) { //Pr nt refers to if the Optional has a value present or not
                         return PrecheckResponse.builder()
                                 .withStatus(404)
                                 .withAssetType(assetType)
