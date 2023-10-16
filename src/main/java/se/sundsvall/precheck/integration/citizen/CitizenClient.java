@@ -1,4 +1,5 @@
-package se.sundsvall.precheck.integration.Citizen;
+package se.sundsvall.precheck.integration.citizen;
+
 
 import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -8,7 +9,6 @@ import se.sundsvall.precheck.api.model.PrecheckResponse;
 import se.sundsvall.precheck.integration.Citizen.configuration.CitizenConfiguration;
 
 import java.util.Optional;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @FeignClient(
