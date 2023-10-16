@@ -14,7 +14,7 @@ public class PrecheckResponse {
     @Schema(description = "The type of asset", example = "PARKING_PERMIT")
     private String assetType;
     @Schema(description = "Orderable", example = "boolean")
-    private boolean orderable = false;
+    private boolean orderable;
     @Schema(description = "The reason if Orderable if false ", example = "String")
     private String reason;
 
