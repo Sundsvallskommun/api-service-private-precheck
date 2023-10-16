@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.sundsvall.precheck.api.model.PrecheckResponse;
-import se.sundsvall.precheck.integration.Citizen.CitizenClient;
-import se.sundsvall.precheck.integration.Citizen.model.CitizenResponse;
+import se.sundsvall.precheck.integration.citizen.CitizenClient;
 import se.sundsvall.precheck.utility.CitizenVerification;
 
 @Service
@@ -29,7 +28,7 @@ public class PrecheckService {
 
 
                 try {
-                        citizenVerification = new CitizenVerification(new ObjectMapper().readValue(response.get(), CitizenResponse.class));
+                        citizenVerification = new CitizenVerification(new ObjectMapper().readValue(response.get(), se.sundsvall.precheck.integration.Citizen.model.CitizenResponse.class));
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
