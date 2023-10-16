@@ -43,10 +43,10 @@ public class PecheckResource {
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(defaultValue = APPLICATION_PROBLEM_JSON_VALUE)))
         @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(defaultValue = APPLICATION_PROBLEM_JSON_VALUE)))
         public PrecheckResponse CheckPermit(
-                @Parameter(name = "partyId", description = "PartyId for the citizen", example = "123") @Validated @PathVariable(name = "partyId") final String partyId,
+                @Parameter(name = "partyId", description = "PartyId for the citizen", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6") @Validated @PathVariable(name = "partyId") final String partyId,
                 @Parameter(name = "assetType", description = "AssetType for the citizen", example = "PARKING_PERMIT") final String assetType,
-                @Parameter(name = "municipalityId", description = "MunicipalityId for the citizen", example = "2555") final int municipalityId
+                @Parameter(name = "municipalityId", description = "MunicipalityId for the citizen", example = "2555") final String municipalityId
         ) {
-                return precheckService.checkPermit(partyId, assetType, municipalityId);
+                return precheckService.checkPermit(partyId, assetType, Integer.parseInt(municipalityId));
         }
 }
