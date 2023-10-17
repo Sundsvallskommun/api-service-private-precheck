@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.Citizen.model;
+package se.sundsvall.precheck.api.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder(setterPrefix = "with")
-public class CitizenAddress {
+public class CitizenAddressTest {
     @Schema(description = "Status", example = "String")
     private String status;
     @Schema(description = "NrDate", example = "String")

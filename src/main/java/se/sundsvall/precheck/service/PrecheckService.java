@@ -25,15 +25,18 @@ public class PrecheckService {
                                 .withReason("Party not found")
                                 .build();
                 }
-
-
                 try {
                         citizenVerification = new CitizenVerification(new ObjectMapper().readValue(response.get(), se.sundsvall.precheck.integration.Citizen.model.CitizenResponse.class));
                 } catch (Exception e) {
-                        e.printStackTrace();
+                        return PrecheckResponse.builder()
+                                .withStatus(500)
+                                .withAssetType(assetType)
+                                .withOrderable(false)
+                                .withReason("Internal Server Error")
+                                .build();
                 }
 
-                if(citizenVerification.validateMunicipalityId(municipalityId) == false) {
+                if(!citizenVerification.validateMunicipalityId(municipalityId)) {
                         return PrecheckResponse.builder()
                                 .withStatus(200)
                                 .withAssetType(assetType)

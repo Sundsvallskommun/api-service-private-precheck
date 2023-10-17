@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.Citizen.model;
+package se.sundsvall.precheck.api.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -29,13 +29,13 @@ public class CitizenResponse {
     @Schema(description = "protectedNR", example = "String")
     private String protectedNR;
     @Schema(description = "addresses")
-    private CitizenAddress[] addresses;
+    private se.sundsvall.precheck.integration.Citizen.model.CitizenAddressTest[] addresses;
 
-    public CitizenAddress[] getAddresses() {
+    public se.sundsvall.precheck.integration.Citizen.model.CitizenAddressTest[] getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(CitizenAddress[] addresses) {
+    public void setAddresses(se.sundsvall.precheck.integration.Citizen.model.CitizenAddressTest[] addresses) {
         this.addresses = addresses;
     }
 }

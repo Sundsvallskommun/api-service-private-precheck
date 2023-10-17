@@ -23,10 +23,11 @@
         <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
         <!-- Generated sources properties -->
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-        <openapi-generator-maven-plugin>7.0.1</openapi-generator-maven-plugin>
+        <openapi-generator-maven-plugin.version>5.3.1</openapi-generator-maven-plugin.version>
         <published.container.port.production>xxx</published.container.port.production>
         <published.container.port.test>xxx</published.container.port.test>
-        <spring-security-jwt.version>1.0.10.RELEASE</spring-security-jwt.version>
+        <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
+        <openapi-generator-maven-plugin-version>7.0.1</openapi-generator-maven-plugin-version>
     </properties>
 
     <dependencies>
@@ -35,6 +36,11 @@
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>${jackson-databind-nullable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator-core</artifactId>
+            <version>7.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -71,32 +77,64 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>${openapi-generator-maven-plugin}</version>
+                <version>${openapi-generator-maven-plugin-version}</version>
                 <executions>
                     <execution>
-                        <id>citizen-api</id>
+                        <id>processEngine</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/generated/citizen-api.yaml</inputSpec>
-                            <output>${generated-sources-path}</output>
-                            <generatorName>spring</generatorName>
-                            <generateApis>false</generateApis>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/generated/citizen-api.yaml
+                            </inputSpec>
                             <generateSupportingFiles>false</generateSupportingFiles>
+                            <output>${generated-sources-path}</output>
+                            <generatorName>jaxrs-spec</generatorName>
+                            <generateApis>false</generateApis>
+                            <output>${generated-sources-path}</output>
                             <configOptions>
-                                <useSpringBoot3>true</useSpringBoot3>
-                                <dateLibrary>java8</dateLibrary>
-                                <generatePom>false</generatePom>
+                                <sourceFolder>${generated-sources-java-path}</sourceFolder>
                                 <generateSupportingFiles>false</generateSupportingFiles>
+                                <dateLibrary>java8</dateLibrary>
+                                <generateApis>false</generateApis>
+                                <modelPackage>generated.client.citizen</modelPackage>
+                                <openApiNullable>false</openApiNullable>
+                                <generatePom>false</generatePom>
+                                <useBeanValidation>false</useBeanValidation>
+                                <useSwaggerAnnotations>false</useSwaggerAnnotations>
                                 <interfaceOnly>true</interfaceOnly>
-                                <modelPackage>generated.se.sundsvall.citizen</modelPackage>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>partyAssets</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/generated/partyAssets-api.yaml
+                            </inputSpec>
+                            <output>${generated-sources-path}</output>
+                            <generatorName>jaxrs-spec</generatorName>
+                            <generateApis>false</generateApis>
+                            <generateApis>false</generateApis>
+                            <configOptions>
+                                <sourceFolder>${generated-sources-java-path}</sourceFolder>
+                                <generateSupportingFiles>false</generateSupportingFiles>
+                                <dateLibrary>java8</dateLibrary>
+                                <apiPackage>generated</apiPackage>
+                                <modelPackage>generated.client.partyAssets</modelPackage>
+                                <openApiNullable>false</openApiNullable>
+                                <generatePom>false</generatePom>
                                 <useBeanValidation>true</useBeanValidation>
                                 <useSwaggerAnnotations>true</useSwaggerAnnotations>
-                                <sourceFolder>party</sourceFolder>
+                                <interfaceOnly>true</interfaceOnly>
                             </configOptions>
                         </configuration>
                     </execution>
