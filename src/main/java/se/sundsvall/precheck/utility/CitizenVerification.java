@@ -1,24 +1,10 @@
 package se.sundsvall.precheck.utility;
 
-
-import se.sundsvall.precheck.integration.Citizen.model.CitizenResponse;
-
+import generated.client.citizen.CitizenExtended;
 public class CitizenVerification {
+    public boolean verify(final CitizenExtended citizen, final String assetType, final int municipalityId) { //TODO implement this method for real
+        return true;
+    }
 
-        private CitizenResponse citizenResponse;
-        private se.sundsvall.precheck.integration.Citizen.model.CitizenAddressTest[] addresses;
-        public CitizenVerification(CitizenResponse citizenResponse) {
-            this.citizenResponse = citizenResponse;
-            this.addresses = citizenResponse.getAddresses();
-        }
-        public boolean validateMunicipalityId(int municipalityId) {
-            for (se.sundsvall.precheck.integration.Citizen.model.CitizenAddressTest address : addresses) {
-                String municipalityIdFromAddress = address.getAddressType();
-                if (municipalityIdFromAddress.equals(String.valueOf(municipalityId))) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
 }
