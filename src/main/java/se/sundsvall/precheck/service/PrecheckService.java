@@ -1,28 +1,30 @@
 package se.sundsvall.precheck.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import se.sundsvall.precheck.integration.citizen.CitizenClient;
-import se.sundsvall.precheck.integration.partyAssets.partyAssetsClient;
+import se.sundsvall.precheck.integration.partyAssets.PartyAssetsClient;
+
 @Service
 public class PrecheckService {
         @Autowired
         private CitizenClient citizenClient;
 
         @Autowired
-        private partyAssetsClient partyAssetsClient;
+        private PartyAssetsClient PartyAssetsClient;
 
 
-        public String checkPermit(final String personId, final String assetType, final int municipalityId) {
-
+        public ResponseEntity<String> checkPermit(final String personId, final String assetType, final int municipalityId) {
+                System.out.println("CitizenSTART");
                 var citizen = citizenClient.getCitizen(personId);
-                var partyAssets = partyAssetsClient.getPartyAssets(personId);
+                System.out.println("PartySTART");
+                var party = PartyAssetsClient.getPartyAssets(personId);
 
-                //log the results of the calls
-                System.out.println("Citizen: " + citizen);
-                System.out.println("PartyAssets: " + partyAssets);
+                System.out.println("Citizenino: " + citizen);
+                System.out.println("Partyino: " + party);
 
-                var TMP_RESULT = "NOT ELIGIBLE";
+                var TMP_RESULT = ResponseEntity.ok("OK");
                 return TMP_RESULT;
         }
 }
