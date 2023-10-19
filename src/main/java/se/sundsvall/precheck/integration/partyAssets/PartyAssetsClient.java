@@ -18,6 +18,7 @@ import java.util.List;
 public interface PartyAssetsClient {
 
     @GetMapping(path = "/partyassets/1.0/assets", produces = "application/json")
-    ResponseEntity<List<Asset>> getPartyAssets(@RequestParam(name = "partyId") String partyId);
+    ResponseEntity<List<Asset>> getPartyAssets(@RequestParam(name = "partyId") String partyId,
+                                               @RequestParam(name = "status") String status);
 
 }
