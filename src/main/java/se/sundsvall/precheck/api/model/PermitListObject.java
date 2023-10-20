@@ -11,6 +11,7 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Builder(setterPrefix = "with")
+//PermitListObject is a DTO that is used to return data to the client
 public class PermitListObject {
     private String permitId; // May be removed at a later date, might be useless for the client to know
     private String permitAssetId;

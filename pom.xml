@@ -32,11 +32,7 @@
 
     <dependencies>
         <!--- openapi-generator-maven-plugin -->
-        <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>jackson-databind-nullable</artifactId>
-            <version>${jackson-databind-nullable.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>openapi-generator-core</artifactId>
@@ -83,26 +79,22 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <version>${openapi-generator-maven-plugin-version}</version>
                 <executions>
                     <execution>
-                        <id>processEngine</id>
+                        <id>citizen</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>
-                                ${project.basedir}/src/main/resources/generated/citizen-api.yaml
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/generated/citizen-api.json</inputSpec>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
                             <generateApis>false</generateApis>
-                            <output>${generated-sources-path}</output>
                             <configOptions>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
                                 <generateSupportingFiles>false</generateSupportingFiles>
@@ -123,23 +115,22 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>
-                                ${project.basedir}/src/main/resources/generated/partyAssets-api.yaml
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/generated/partyAssets-api.json</inputSpec>
+                            <generateSupportingFiles>false</generateSupportingFiles>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
-                            <generateApis>false</generateApis>
                             <generateApis>false</generateApis>
                             <configOptions>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
                                 <generateSupportingFiles>false</generateSupportingFiles>
                                 <dateLibrary>java8</dateLibrary>
+                                <generateApis>false</generateApis>
                                 <apiPackage>generated</apiPackage>
                                 <modelPackage>generated.client.partyAssets</modelPackage>
                                 <openApiNullable>false</openApiNullable>
                                 <generatePom>false</generatePom>
-                                <useBeanValidation>true</useBeanValidation>
-                                <useSwaggerAnnotations>true</useSwaggerAnnotations>
+                                <useBeanValidation>false</useBeanValidation>
+                                <useSwaggerAnnotations>false</useSwaggerAnnotations>
                                 <interfaceOnly>true</interfaceOnly>
                             </configOptions>
                         </configuration>

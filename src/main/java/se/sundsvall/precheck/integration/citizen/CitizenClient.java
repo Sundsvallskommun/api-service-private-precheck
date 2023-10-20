@@ -16,7 +16,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 )
 public interface CitizenClient {
     @GetMapping(path = "/citizen/2.0/{personId}", produces =  (APPLICATION_JSON_VALUE))
-    ResponseEntity<CitizenExtended> getCitizen(@PathVariable(name = "personId") final String personId); //This means that the return value is a ResponseEntity<CitizenExtended> (which is a CitizenExtended object wrapped in a ResponseEntity object) and that the method takes a String as an argument.
+    ResponseEntity<CitizenExtended> getCitizen(@PathVariable(name = "personId") final String personId);
 }
 
 

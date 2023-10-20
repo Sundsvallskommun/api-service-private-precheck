@@ -38,7 +38,7 @@ public class PecheckResource {
             @Parameter(name = "municipalityId", description = "MunicipalityId for the citizen", example = "2555") final String municipalityId,
             @Parameter(name = "assetType", description = "AssetType for the citizen", example = "PARKING_PERMIT", allowEmptyValue = true, required = false) final String assetType
     ) {
-        return precheckService.checkPermit(partyId, municipalityId,assetType );
+        return precheckService.checkPermit(partyId, municipalityId,assetType);
     }
 
 }

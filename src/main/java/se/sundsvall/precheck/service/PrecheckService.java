@@ -1,9 +1,12 @@
 package se.sundsvall.precheck.service;
 
+
 import generated.client.citizen.CitizenExtended;
 import generated.client.partyAssets.Asset;
 import generated.client.partyAssets.Status;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,81 +22,55 @@ import java.util.Objects;
 
 @Service
 public class PrecheckService {
+        private static final Logger logger = LoggerFactory.getLogger(PrecheckService.class);
         private final CitizenClient citizenClient;
         private final PartyAssetsClient partyAssetsClient;
 
+        private final static String PARTYID_REGEX = "^[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-4[0-9a-zA-Z]{3}-[89abAB][0-9a-zA-Z]{3}-[0-9a-zA-Z]{12}$";
+        private final static String MUNICIPALITYID_REGEX = "^[0-9]{4}$";
         @Autowired
         public PrecheckService(CitizenClient citizenClient, PartyAssetsClient partyAssetsClient) {
                 this.citizenClient = citizenClient;
                 this.partyAssetsClient = partyAssetsClient;
         }
-
-
-        public ResponseEntity checkPermit(String partyId, String municipalityId, String assetType ) {
+        public ResponseEntity checkPermit(String partyId, String municipalityId, String assetType) {
                 partyId = StringUtils.trimToEmpty(partyId);
                 municipalityId = StringUtils.trimToEmpty(municipalityId);
 
-                if (partyId == null || partyId.isEmpty()) {
-                        return new ResponseEntity<PrecheckResponse>(
-                                PrecheckResponse.builder()
-                                        .withAssetType(assetType)
-                                        .withOrderable(false)
-                                        .withMessage("Invalid data in request")
 
-                                        .build(), HttpStatus.BAD_REQUEST);
+                if (!partyId.matches(PARTYID_REGEX) || !municipalityId.matches(MUNICIPALITYID_REGEX)) {
+                        logger.error("Invalid partyId or municipalityId");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(precheckResponseBuilder(assetType, false, "Invalid data in the request"));
+                }
+
+                if (StringUtils.isEmpty(partyId)) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(precheckResponseBuilder(assetType, false, "Invalid data in the request"));
                 }
 
                 var citizen = citizenClient.getCitizen(partyId);
                 var party = partyAssetsClient.getPartyAssets(partyId, String.valueOf(Status.ACTIVE));
 
-                if (citizen == null || citizen.getStatusCode().isError() || party.getStatusCode().isError() || citizen.getStatusCode().isSameCodeAs(HttpStatus.valueOf(204))) {
-                        return new ResponseEntity<PrecheckResponse>(
-                                PrecheckResponse.builder()
-                                        .withAssetType(assetType)
-                                        .withOrderable(false)
-                                        .withMessage("Resource not found or resulted in an error") // TODO add a better message
-                                        .build(), HttpStatus.NOT_FOUND);
+                if (citizen.getStatusCode().isError() || party.getStatusCode().isError() || citizen.getStatusCode() == HttpStatus.NO_CONTENT || party.getStatusCode() == HttpStatus.NO_CONTENT) {
+                        logger.error("Resource not found");
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(precheckResponseBuilder(assetType, false, "Resource not found or resulted in an error"));
                 }
-                if (!checkMunicipalityId(citizen.getBody(), municipalityId)) {  //if no municipalityId is found, return not found
-                        return new ResponseEntity<PrecheckResponse>(
-                                PrecheckResponse.builder()
-                                        .withAssetType(assetType)
-                                        .withOrderable(false)
-                                        .withMessage("Invalid data in request")
-                                        .build(), HttpStatus.NOT_FOUND
-                        );
+                if (!checkMunicipalityId(citizen.getBody())) {
+                        logger.info("Municipality ID not found during check");
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(precheckResponseBuilder(assetType, false, "Invalid data in the request"));
                 }
 
-                if (assetType == null || assetType.isEmpty()) {
+                if (StringUtils.isEmpty(assetType)) {
                         var permits = extractPermits(Objects.requireNonNull(party.getBody()));
-                        return new ResponseEntity<PermitListResponse>(
-                                PermitListResponse.builder()
-                                        .withPartyId(partyId)
-                                        .withMunicipalityId(municipalityId)
-                                        .withPermits(permits)
-                                        .build(), HttpStatus.OK
-                        );
+                        return ResponseEntity.ok().body(PermitListResponse.builder()
+                                .withPartyId(partyId)
+                                .withMunicipalityId(municipalityId)
+                                .withPermits(permits)
+                                .build());
                 }
 
-                if (party.getBody().isEmpty()) {
-                        return new ResponseEntity<PrecheckResponse>(
-                                PrecheckResponse.builder()
-                                        .withAssetType(assetType)
-                                        .withOrderable(true)
-                                        .withMessage("")
-                                        .build(), HttpStatus.OK
-                        );
-                }
-
-                return new ResponseEntity<PrecheckResponse>(
-                        PrecheckResponse.builder()
-                                .withAssetType(assetType)
-                                .withOrderable(true)
-                                .withMessage("")
-                                .build(), HttpStatus.OK
-                );
+                logger.info("Permit check successful");
+                return ResponseEntity.ok(precheckResponseBuilder(assetType, true, ""));
         }
-
 
         private PrecheckResponse precheckResponseBuilder(String assetType, boolean orderable, String message) {
                 return PrecheckResponse.builder()
@@ -101,38 +78,35 @@ public class PrecheckService {
                         .withOrderable(orderable)
                         .withMessage(message)
                         .build();
-
         }
-        private boolean checkMunicipalityId(CitizenExtended citizen, String municipalityId) {
-                if(citizen == null){
-                        System.out.println("CheckMunicipalityId: citizen is null");
+
+        private boolean checkMunicipalityId(CitizenExtended citizen) {
+                if (citizen == null) {
+                        logger.error("Citizen is null during municipality ID check");
                         return false;
                 }
                 for (var citizenAsset : citizen.getAddresses()) {
-
+                        //TODO: REMOVE THIS REASSIGNMENT LATER
+                        String municipalityId = "POPULATION_REGISTRATION_ADDRESS";
                         if (citizenAsset.getAddressType().equals(municipalityId)) {
-                                System.out.println("CheckMunicipalityId: municipalityId found");
+                                logger.info("Municipality ID found during check");
                                 return true;
                         }
                 }
-                System.out.println("CheckMunicipalityId: municipalityId not found");
+                logger.info("Municipality ID not found during check");
                 return false;
         }
 
         private PermitListObject[] extractPermits(List<Asset> partyContent) {
                 PermitListObject[] permitObjects = new PermitListObject[partyContent.size()];
-                System.out.println("ExtractPermits: partyContent size:"+partyContent.size());
-                for (int i = 0; i < permitObjects.length; i++){
-                        System.out.println("ExtractPermits: loop:"+i );
+                for (int i = 0; i < permitObjects.length; i++) {
                         permitObjects[i] = PermitListObject.builder()
                                 .withPermitId(partyContent.get(i).getPartyId())
                                 .withPermitAssetId(partyContent.get(i).getAssetId())
                                 .withOrigin(partyContent.get(i).getOrigin())
                                 .withPermitType(partyContent.get(i).getType())
-
                                 .withIssued(partyContent.get(i).getIssued())
                                 .withValidTo(partyContent.get(i).getValidTo())
-
                                 .withPermitStatus(partyContent.get(i).getStatus())
                                 .withPermitDescription(partyContent.get(i).getDescription())
                                 .withPermitAdditionalParameters(partyContent.get(i).getAdditionalParameters())
@@ -140,6 +114,4 @@ public class PrecheckService {
                 }
                 return permitObjects;
         }
-
-
 }
