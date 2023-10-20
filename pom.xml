@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>se.sundsvall</groupId>
     <artifactId>api-service-private-precheck</artifactId>
-    <version>1.0</version>
+    <version>0.5</version>
     <name>api-service-private-precheck</name>
 
     <properties>
