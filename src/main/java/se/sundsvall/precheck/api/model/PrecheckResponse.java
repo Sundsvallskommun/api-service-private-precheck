@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Builder(setterPrefix = "with")
 public class PrecheckResponse {
-    @Schema(description = "The type of asset", example = "PARKING_PERMIT")
+    @Schema(description = "The type of asset", example = "PERMIT")
     private String assetType;
     @Schema(description = "Orderable", example = "boolean")
     private boolean orderable;
