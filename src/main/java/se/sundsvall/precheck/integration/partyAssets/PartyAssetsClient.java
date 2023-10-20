@@ -3,9 +3,13 @@ package se.sundsvall.precheck.integration.partyAssets;
 import generated.client.partyAssets.Asset;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.precheck.integration.partyAssets.configuration.PartyAssetsConfiguration;
+import se.sundsvall.precheck.service.utils.Util;
+
+import static se.sundsvall.precheck.service.utils.Util;
 
 import java.util.List;
 
@@ -21,4 +25,8 @@ public interface PartyAssetsClient {
     ResponseEntity<List<Asset>> getPartyAssets(@RequestParam(name = "partyId") String partyId,
                                                @RequestParam(name = "status") String status);
 
+    @ExceptionHandler
+    default ResponseEntity handleException(Exception e){
+        return ResponseEntity.status(500).body(e.getMessage());
+    };
 }
