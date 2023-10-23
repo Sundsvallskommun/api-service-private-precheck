@@ -10,7 +10,7 @@ import java.time.Duration;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix ="integration.citizen")
+@ConfigurationProperties(prefix = "integration.citizen")
 public class CitizenProperties { //TODO Remove the lazy self-made record and use the one from Lombok
     private String tokenUrl;
     private String oauthClientId;
