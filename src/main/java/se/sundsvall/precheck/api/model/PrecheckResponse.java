@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Builder(setterPrefix = "with")
-public class PrecheckResponse {
+public class PreCheckResponse {
     @Schema(description = "The type of asset", example = "PERMIT")
     private String assetType;
     @Schema(description = "Orderable", example = "boolean")
-    private boolean orderable;
+        private boolean orderable;
     @Schema(description = "Extra message about the return data, for instance why Orderable was false", example = "String")
     private String message;
 }
