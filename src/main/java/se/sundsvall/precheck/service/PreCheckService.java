@@ -1,6 +1,5 @@
 package se.sundsvall.precheck.service;
 
-
 import generated.client.partyAssets.Status;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,67 +8,61 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import se.sundsvall.precheck.api.model.PermitListResponse;
 import se.sundsvall.precheck.integration.citizen.CitizenClient;
 import se.sundsvall.precheck.integration.partyAssets.PartyAssetsClient;
 import se.sundsvall.precheck.utils.PreCheckUtil;
 
 import java.util.Objects;
 
-import static se.sundsvall.precheck.utils.Constants.MUNICIPALITY_ID_REGEX;
-import static se.sundsvall.precheck.utils.Constants.PARTY_ID_REGEX;
-
 @Service
 public class PreCheckService {
+    // Initialize logger for the PreCheckService class
     private static final Logger logger = LoggerFactory.getLogger(PreCheckService.class);
+
+    // Initialize PreCheckUtil, CitizenClient, and PartyAssetsClient
     private final PreCheckUtil util = new PreCheckUtil();
     private final CitizenClient citizenClient;
     private final PartyAssetsClient partyAssetsClient;
 
+    // Constructor for PreCheckService to initialize required components
     @Autowired
     public PreCheckService(CitizenClient citizenClient, PartyAssetsClient partyAssetsClient) {
-        this.citizenClient = Objects.requireNonNull(citizenClient, "CitizenClient must not be null");
-        this.partyAssetsClient = Objects.requireNonNull(partyAssetsClient, "PartyAssetsClient must not be null");
+        this.citizenClient = Objects.requireNonNull(citizenClient);
+        this.partyAssetsClient = Objects.requireNonNull(partyAssetsClient);
     }
 
-    public ResponseEntity checkPermit(String partyId, String municipalityId, String assetType) {
+    // Method to check permits based on partyId, municipalityId, and assetType
+    public ResponseEntity<?> checkPermit(String partyId, String municipalityId, String assetType) {
+        // Trim and clean the inputs
         partyId = StringUtils.trimToEmpty(partyId);
         municipalityId = StringUtils.trimToEmpty(municipalityId);
 
-        if (!partyId.matches(PARTY_ID_REGEX) || !municipalityId.matches(MUNICIPALITY_ID_REGEX)) {
-            logger.error("Invalid partyId or municipalityId: {}, {}", partyId, municipalityId);
-            return util.buildPrecheckResponseEntity(HttpStatus.BAD_REQUEST, assetType, false, "Invalid data in the request");
+        // Check if the provided partyId and municipalityId are in the correct format and if any of the parameters are empty
+        if (!util.isValidIds(partyId, municipalityId)) {
+            return util.handleInvalidIds(partyId, municipalityId, assetType);
         }
 
-        if (StringUtils.isEmpty(partyId) || StringUtils.isEmpty(municipalityId)) {
-            logger.error("Empty parameters in the request, partyId: {}, municipalityId: {}", partyId, municipalityId);
-            return util.buildPrecheckResponseEntity(HttpStatus.BAD_REQUEST, assetType, false, "Invalid data in the request");
-        }
-
-
+        // Retrieve citizen and party assets using the provided partyId
         var citizen = citizenClient.getCitizen(partyId);
         var party = partyAssetsClient.getPartyAssets(partyId, String.valueOf(Status.ACTIVE));
 
-        if (citizen.getStatusCode().isError() || party.getStatusCode().isError() || citizen.getStatusCode() == HttpStatus.NO_CONTENT || party.getStatusCode() == HttpStatus.NO_CONTENT) {
-            logger.error("Resource not found for partyId: {}", partyId);
-            return util.buildPrecheckResponseEntity(HttpStatus.NOT_FOUND, assetType, false, "Resource not found or resulted in an error");
+        //Check if the api calls was successful
+        if (util.resourceNotFound(citizen, party)) {
+            logger.info("No citizen {} {} or party assets {} {} found for the given partyId: {}", citizen.getStatusCode(), citizen.getBody(), party.getStatusCode(),party.getBody(), partyId);
+            return util.buildPrecheckResponseEntity(HttpStatus.NOT_FOUND, assetType, false, "No citizen or party assets found for the given partyId");
         }
 
-        if (!util.compareAllMunicipalityIds(Objects.requireNonNull(citizen.getBody(), "Citizen body must not be null"))) {
-            logger.info("No valid Municipality ID found during check for partyId: {}", partyId);
-            return util.buildPrecheckResponseEntity(HttpStatus.NOT_FOUND, assetType, false, "Municipality ID not found in the request");
+        // Check if any valid MunicipalityId is associated with the PartyId
+        if (!util.hasValidMunicipalityId(citizen)) {
+            logger.info("No valid Municipality ID found during the check for partyId: {}", partyId);
+            return util.buildPrecheckResponseEntity(HttpStatus.NOT_FOUND, assetType, false, "No valid Municipality ID connected to the given partyId");
         }
 
-        if (StringUtils.isEmpty(assetType)) {
-            var partyBody = Objects.requireNonNull(party.getBody(), "Party body must not be null");
-            var permits = util.convertAssetsToPermitListObjects(partyBody);
-            logger.info("Permit list retrieved successfully for partyId: {}", partyId);
-            return ResponseEntity.ok().body(PermitListResponse.builder()
-                    .withPartyId(partyId)
-                    .withPermits(permits)
-                    .build());
+        if (!StringUtils.isEmpty(assetType)) {
+            return util.handleAssetType(assetType, String.valueOf(party));
         }
-        logger.info("Permit check successful for partyId: {}", partyId);
-        return util.buildPrecheckResponseEntity(HttpStatus.OK, assetType, true, "");
+
+        return util.handleNoAssetType(party, partyId);
+
     }
 }
