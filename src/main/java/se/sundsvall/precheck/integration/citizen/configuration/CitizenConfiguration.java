@@ -2,6 +2,8 @@ package se.sundsvall.precheck.integration.citizen.configuration;
 
 import feign.Request;
 import feign.codec.ErrorDecoder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -14,45 +16,42 @@ import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 @Import(FeignConfiguration.class)
+@Getter
+@AllArgsConstructor
 public class CitizenConfiguration {
 
     public static final String CLIENT_ID = "Citizen";
 
     private final CitizenProperties citizenProperties;
 
-    public CitizenConfiguration(CitizenProperties citizenProperties) {
-        this.citizenProperties = citizenProperties;
-    }
-
     @Bean
     public FeignBuilderCustomizer feignBuilderCustomizer() {
         return FeignMultiCustomizer.create()
-                .withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID))
-                .withRequestOptions(feignOptions())
+                .withErrorDecoder(errorDecoder())
+                .withRequestOptions(createFeignOptions())
                 .withRetryableOAuth2InterceptorForClientRegistration(clientRegistration())
                 .composeCustomizersToOne();
     }
 
     private ClientRegistration clientRegistration() {
         return ClientRegistration.withRegistrationId(CLIENT_ID)
-                .tokenUri(citizenProperties.getTokenUrl())
-                .clientId(citizenProperties.getOauthClientId())
-                .clientSecret(citizenProperties.getOauthClientSecret())
+                .tokenUri(citizenProperties.tokenUrl())
+                .clientId(citizenProperties.oauthClientId())
+                .clientSecret(citizenProperties.oauthClientSecret())
                 .authorizationGrantType(new AuthorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue()))
                 .build();
     }
 
-    ErrorDecoder errorDecoder() {
-        //Return 404 as a 404.
+    @Bean
+    public ErrorDecoder errorDecoder() {
         return new ProblemErrorDecoder(CLIENT_ID, List.of(HttpStatus.NOT_FOUND.value()));
     }
 
-    Request.Options feignOptions() {
+    private Request.Options createFeignOptions() {
         return new Request.Options(
-                citizenProperties.getConnectTimeout().toMillis(), TimeUnit.MILLISECONDS,
-                citizenProperties.getReadTimeout().toMillis(), TimeUnit.MILLISECONDS,
+                citizenProperties.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,
+                citizenProperties.readTimeout().toMillis(), TimeUnit.MILLISECONDS,
                 false
         );
     }

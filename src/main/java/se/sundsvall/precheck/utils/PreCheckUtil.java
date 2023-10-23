@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.service.utils;
+package se.sundsvall.precheck.utils;
 
 import generated.client.citizen.CitizenExtended;
 import generated.client.partyAssets.Asset;
