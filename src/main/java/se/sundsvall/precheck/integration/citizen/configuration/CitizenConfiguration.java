@@ -28,7 +28,7 @@ public class CitizenConfiguration {
     @Bean
     public FeignBuilderCustomizer feignBuilderCustomizer() {
         return FeignMultiCustomizer.create()
-                .withErrorDecoder(errorDecoder())
+                .withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID))
                 .withRequestOptions(createFeignOptions())
                 .withRetryableOAuth2InterceptorForClientRegistration(clientRegistration())
                 .composeCustomizersToOne();
@@ -42,12 +42,6 @@ public class CitizenConfiguration {
                 .authorizationGrantType(new AuthorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue()))
                 .build();
     }
-
-    @Bean
-    public ErrorDecoder errorDecoder() {
-        return new ProblemErrorDecoder(CLIENT_ID, List.of(HttpStatus.NOT_FOUND.value()));
-    }
-
     private Request.Options createFeignOptions() {
         return new Request.Options(
                 citizenProperties.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,

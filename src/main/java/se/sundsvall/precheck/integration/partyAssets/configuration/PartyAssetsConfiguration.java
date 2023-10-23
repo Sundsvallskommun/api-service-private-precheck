@@ -43,11 +43,6 @@ public class PartyAssetsConfiguration {
                 .build();
     }
 
-    ErrorDecoder errorDecoder() {
-        //Return 404 as a 404.
-        return new ProblemErrorDecoder(CLIENT_ID, List.of(HttpStatus.NOT_FOUND.value()));
-    }
-
     Request.Options feignOptions() {
         return new Request.Options(
                 partyAssetsProperties.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,
