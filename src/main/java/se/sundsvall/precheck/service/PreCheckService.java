@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import se.sundsvall.precheck.api.model.PermitListResponse;
 import se.sundsvall.precheck.integration.citizen.CitizenClient;
 import se.sundsvall.precheck.integration.partyAssets.PartyAssetsClient;
-import se.sundsvall.precheck.service.utils.PreCheckUtil;
+import se.sundsvall.precheck.utils.PreCheckUtil;
 
 import java.util.Objects;
 
-import static se.sundsvall.precheck.service.utils.Constants.MUNICIPALITY_ID_REGEX;
-import static se.sundsvall.precheck.service.utils.Constants.PARTY_ID_REGEX;
+import static se.sundsvall.precheck.utils.Constants.MUNICIPALITY_ID_REGEX;
+import static se.sundsvall.precheck.utils.Constants.PARTY_ID_REGEX;
 
 @Service
 public class PreCheckService {

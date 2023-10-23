@@ -36,9 +36,9 @@ public class PartyAssetsConfiguration {
 
     private ClientRegistration clientRegistration() {
         return ClientRegistration.withRegistrationId(CLIENT_ID)
-                .tokenUri(partyAssetsProperties.getTokenUrl())
-                .clientId(partyAssetsProperties.getOauthClientId())
-                .clientSecret(partyAssetsProperties.getOauthClientSecret())
+                .tokenUri(partyAssetsProperties.tokenUrl())
+                .clientId(partyAssetsProperties.oauthClientId())
+                .clientSecret(partyAssetsProperties.oauthClientSecret())
                 .authorizationGrantType(new AuthorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue()))
                 .build();
     }
@@ -50,8 +50,8 @@ public class PartyAssetsConfiguration {
 
     Request.Options feignOptions() {
         return new Request.Options(
-                partyAssetsProperties.getConnectTimeout().toMillis(), TimeUnit.MILLISECONDS,
-                partyAssetsProperties.getReadTimeout().toMillis(), TimeUnit.MILLISECONDS,
+                partyAssetsProperties.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,
+                partyAssetsProperties.readTimeout().toMillis(), TimeUnit.MILLISECONDS,
                 false
         );
     }
