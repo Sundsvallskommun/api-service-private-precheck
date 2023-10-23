@@ -20,9 +20,11 @@ public class PartyAssetsConfiguration {
     public static final String CLIENT_ID = "PartyAssets";
 
     private final PartyAssetsProperties partyAssetsProperties;
+
     public PartyAssetsConfiguration(PartyAssetsProperties partyAssetsProperties) {
         this.partyAssetsProperties = partyAssetsProperties;
     }
+
     @Bean
     public FeignBuilderCustomizer feignBuilderCustomizer() {
         return FeignMultiCustomizer.create()

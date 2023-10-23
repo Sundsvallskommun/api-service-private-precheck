@@ -9,9 +9,6 @@ import lombok.Getter;
 @Builder(setterPrefix = "with")
 public class PermitListResponse {
     private final String partyId;
-
-    private final String municipalityId;
-
     private final PermitListObject[] permits;
 }
 
