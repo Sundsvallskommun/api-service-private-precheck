@@ -51,7 +51,7 @@ public class PreCheckUtil {
         if (partyBody.isEmpty()) {
             return buildPrecheckResponseEntity(HttpStatus.OK, assetType, true, "");
         } else {
-            return buildPrecheckResponseEntity(HttpStatus.OK, assetType, false, "Permit already exists for the given partyId");
+            return buildPrecheckResponseEntity(HttpStatus.OK, assetType, false, "'"+assetType+"' can't be ordered for the given partyId because other permits already exist for the partyId");
         }
     }
 
