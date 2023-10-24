@@ -16,6 +16,11 @@
     <name>api-service-private-precheck</name>
 
     <properties>
+        <!-- Pipeline properties -->
+        <docker.image.name>se.sundsvall/private-preCheck</docker.image.name>
+        <generated-sources-java-path>src/main/java</generated-sources-java-path>
+        <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
+        <!-- Generated sources properties -->
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <openapi-generator-maven-plugin.version>5.3.1</openapi-generator-maven-plugin.version>
         <published.container.port.production>xxx</published.container.port.production>
@@ -63,22 +68,6 @@
             <artifactId>dept44-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.12.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.6</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -95,14 +84,15 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/generated/citizen-api.json</inputSpec>
+                            <generateSupportingFiles>false</generateSupportingFiles>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
                             <generateApis>false</generateApis>
-                            <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
                                 <dateLibrary>java8</dateLibrary>
-                                <modelPackage>integrations.client.citizen</modelPackage>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <modelPackage>generated.client.citizen</modelPackage>
                                 <openApiNullable>false</openApiNullable>
                                 <generatePom>false</generatePom>
                                 <useBeanValidation>false</useBeanValidation>
@@ -125,7 +115,8 @@
                             <configOptions>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
                                 <dateLibrary>java8</dateLibrary>
-                                <modelPackage>integrations.client.partyAssets</modelPackage>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <modelPackage>generated.client.partyAssets</modelPackage>
                                 <openApiNullable>false</openApiNullable>
                                 <generatePom>false</generatePom>
                                 <useBeanValidation>false</useBeanValidation>
