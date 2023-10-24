@@ -1,8 +1,7 @@
 package se.sundsvall.precheck.utils;
 
-import generated.client.citizen.CitizenExtended;
-import generated.client.partyAssets.Asset;
-import org.apache.commons.lang3.StringUtils;
+import integrations.client.citizen.CitizenExtended;
+import integrations.client.partyAssets.Asset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,43 +15,46 @@ import java.util.Objects;
 
 public class PreCheckUtil {
     private static final Logger logger = LoggerFactory.getLogger(PreCheckUtil.class);
-    public final static String PARTY_ID_REGEX = "^[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-4[0-9a-zA-Z]{3}-[89abAB][0-9a-zA-Z]{3}-[0-9a-zA-Z]{12}$";
-    public final static String MUNICIPALITY_ID_REGEX = "^[0-9]{4}$";
-
-    //Validate partyId and municipalityId
-    public static boolean isValidIds(String partyId, String municipalityId) {
-        return partyId.matches(PARTY_ID_REGEX) && municipalityId.matches(MUNICIPALITY_ID_REGEX)
-                && !StringUtils.isEmpty(partyId) && !StringUtils.isEmpty(municipalityId);
-    }
-
+    private static final String CORRECT_ADDRESS_TYPE = "POPULATION_REGISTRATION_ADDRESS";
     public static boolean resourceNotFound(ResponseEntity<?> citizen, ResponseEntity<?> party) {
-        return citizen.getStatusCode().isError() || party.getStatusCode().isError() ||
-                citizen.getStatusCode() == HttpStatus.NO_CONTENT || party.getStatusCode() == HttpStatus.NO_CONTENT;
+        try {
+            return citizen.getStatusCode().isError() || party.getStatusCode().isError() ||
+                    citizen.getStatusCode() == HttpStatus.NO_CONTENT || party.getStatusCode() == HttpStatus.NO_CONTENT;
+        }catch (Exception e){
+            logger.error("Error occurred while validating in resourceNotFound : "+ e.getMessage());
+            return true;
+        }
     }
 
     // Check if all municipality IDs are the same
     public static boolean hasValidMunicipalityId(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
         var citizen = citizenEntity.getBody();
-        if (citizen == null || municipalityId.isEmpty()) {
+        if (citizen == null || municipalityId == null || municipalityId.isEmpty()) {
             logger.error("Citizen or MunicipalityId is null during municipality ID check");
             return false;
         }
         for (var citizenAddress : citizen.getAddresses()) {
-            if (citizenAddress.getAddressType().equals(municipalityId)) {
+            if (!citizenAddress.getAddressType().equals(CORRECT_ADDRESS_TYPE)){
+                continue;
+            }
+            logger.info("Looped the citizen: "+citizenAddress.getAddressType() + " != " +CORRECT_ADDRESS_TYPE +" == " + (citizenAddress.getAddressType().equals(CORRECT_ADDRESS_TYPE)));
+            logger.info("municipalityId loop " + citizenAddress.getMunicipality().equals(municipalityId) + " ==  "+citizenAddress.getMunicipality() + municipalityId);
+            if (citizenAddress.getMunicipality().equals(municipalityId)){
                 logger.info("Municipality ID found during check");
                 return true;
             }
         }
+
         logger.info("Municipality ID not found during check");
         return false;
     }
 
-    public static ResponseEntity<PreCheckResponse> handleAssetType(String assetType, String partyBody) {
-        if (partyBody.isEmpty()) {
+    public static ResponseEntity<PreCheckResponse> handleAssetType(String assetType, ResponseEntity<List<Asset>> partyBody) {
+        if (Objects.requireNonNull(partyBody.getBody()).isEmpty()) {
             return buildPrecheckResponseEntity(HttpStatus.OK, assetType, true, "");
-        } else {
-            return buildPrecheckResponseEntity(HttpStatus.OK, assetType, false, "'"+assetType+"' can't be ordered for the given partyId because other permits already exist for the partyId");
         }
+
+        return buildPrecheckResponseEntity(HttpStatus.OK, assetType, false, "'"+assetType+"' can't be ordered for the given partyId because other permits already exist for the partyId");
     }
 
     public static ResponseEntity<PermitListResponse> handleNoGivenAssetType(ResponseEntity<List<Asset>> party , String partyId) {

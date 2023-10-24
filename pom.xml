@@ -16,12 +16,6 @@
     <name>api-service-private-precheck</name>
 
     <properties>
-        <!-- Pipeline properties -->
-        <docker.image.name>ms-template</docker.image.name>
-        <exposed.app.port>8080</exposed.app.port>
-        <generated-sources-java-path>src/main/java</generated-sources-java-path>
-        <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
-        <!-- Generated sources properties -->
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <openapi-generator-maven-plugin.version>5.3.1</openapi-generator-maven-plugin.version>
         <published.container.port.production>xxx</published.container.port.production>
@@ -74,6 +68,16 @@
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
         </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.12.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
 
     </dependencies>
 
@@ -91,16 +95,14 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/generated/citizen-api.json</inputSpec>
-                            <generateSupportingFiles>false</generateSupportingFiles>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
                             <generateApis>false</generateApis>
+                            <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
-                                <generateSupportingFiles>false</generateSupportingFiles>
                                 <dateLibrary>java8</dateLibrary>
-                                <generateApis>false</generateApis>
-                                <modelPackage>generated.client.citizen</modelPackage>
+                                <modelPackage>integrations.client.citizen</modelPackage>
                                 <openApiNullable>false</openApiNullable>
                                 <generatePom>false</generatePom>
                                 <useBeanValidation>false</useBeanValidation>
@@ -116,17 +118,14 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/generated/partyAssets-api.json</inputSpec>
-                            <generateSupportingFiles>false</generateSupportingFiles>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
                             <generateApis>false</generateApis>
+                            <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
-                                <generateSupportingFiles>false</generateSupportingFiles>
                                 <dateLibrary>java8</dateLibrary>
-                                <generateApis>false</generateApis>
-                                <apiPackage>generated</apiPackage>
-                                <modelPackage>generated.client.partyAssets</modelPackage>
+                                <modelPackage>integrations.client.partyAssets</modelPackage>
                                 <openApiNullable>false</openApiNullable>
                                 <generatePom>false</generatePom>
                                 <useBeanValidation>false</useBeanValidation>
