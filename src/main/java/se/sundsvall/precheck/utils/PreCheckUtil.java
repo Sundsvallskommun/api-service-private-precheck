@@ -14,36 +14,30 @@ import se.sundsvall.precheck.api.model.PreCheckResponse;
 import java.util.List;
 import java.util.Objects;
 
-import static se.sundsvall.precheck.utils.Constants.MUNICIPALITY_ID_REGEX;
-import static se.sundsvall.precheck.utils.Constants.PARTY_ID_REGEX;
-
 public class PreCheckUtil {
     private static final Logger logger = LoggerFactory.getLogger(PreCheckUtil.class);
+    public final static String PARTY_ID_REGEX = "^[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-4[0-9a-zA-Z]{3}-[89abAB][0-9a-zA-Z]{3}-[0-9a-zA-Z]{12}$";
+    public final static String MUNICIPALITY_ID_REGEX = "^[0-9]{4}$";
 
     //Validate partyId and municipalityId
-    public boolean isValidIds(String partyId, String municipalityId) {
+    public static boolean isValidIds(String partyId, String municipalityId) {
         return partyId.matches(PARTY_ID_REGEX) && municipalityId.matches(MUNICIPALITY_ID_REGEX)
                 && !StringUtils.isEmpty(partyId) && !StringUtils.isEmpty(municipalityId);
     }
 
-    public boolean resourceNotFound(ResponseEntity<?> citizen, ResponseEntity<?> party) {
+    public static boolean resourceNotFound(ResponseEntity<?> citizen, ResponseEntity<?> party) {
         return citizen.getStatusCode().isError() || party.getStatusCode().isError() ||
                 citizen.getStatusCode() == HttpStatus.NO_CONTENT || party.getStatusCode() == HttpStatus.NO_CONTENT;
     }
 
-    public boolean hasValidMunicipalityId(ResponseEntity<CitizenExtended> citizenBody) {
-        return compareAllMunicipalityIds(Objects.requireNonNull(citizenBody.getBody(), "Citizen body must not be null"));
-    }
-
     // Check if all municipality IDs are the same
-    public boolean compareAllMunicipalityIds(CitizenExtended citizen) {
-        if (citizen == null) {
-            logger.error("Citizen is null during municipality ID check");
+    public static boolean hasValidMunicipalityId(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
+        var citizen = citizenEntity.getBody();
+        if (citizen == null || municipalityId.isEmpty()) {
+            logger.error("Citizen or MunicipalityId is null during municipality ID check");
             return false;
         }
         for (var citizenAddress : citizen.getAddresses()) {
-            // Temporary reassignment to handle the fact that the municipality ID is not set to a valid ID in the dev citizen API
-            String municipalityId = "POPULATION_REGISTRATION_ADDRESS";
             if (citizenAddress.getAddressType().equals(municipalityId)) {
                 logger.info("Municipality ID found during check");
                 return true;
@@ -53,7 +47,7 @@ public class PreCheckUtil {
         return false;
     }
 
-    public ResponseEntity<PreCheckResponse> handleAssetType(String assetType, String partyBody) {
+    public static ResponseEntity<PreCheckResponse> handleAssetType(String assetType, String partyBody) {
         if (partyBody.isEmpty()) {
             return buildPrecheckResponseEntity(HttpStatus.OK, assetType, true, "");
         } else {
@@ -61,7 +55,7 @@ public class PreCheckUtil {
         }
     }
 
-    public ResponseEntity<PermitListResponse> handleNoAssetType(ResponseEntity<List<Asset>> party , String partyId) {
+    public static ResponseEntity<PermitListResponse> handleNoGivenAssetType(ResponseEntity<List<Asset>> party , String partyId) {
         try {
             var permits = convertAssetsToPermitListObjects(Objects.requireNonNull(party.getBody()));
             return ResponseEntity.ok().body(PermitListResponse.builder()
@@ -98,7 +92,7 @@ public class PreCheckUtil {
     }
 
     // Build a ResponseEntity for the PreCheckResponse
-    public ResponseEntity<PreCheckResponse> buildPrecheckResponseEntity(HttpStatus status, String assetType, boolean orderable, String message) {
+    public static ResponseEntity<PreCheckResponse> buildPrecheckResponseEntity(HttpStatus status, String assetType, boolean orderable, String message) {
         PreCheckResponse precheckResponse = PreCheckResponse.builder()
                 .withAssetType(assetType)
                 .withOrderable(orderable)
@@ -107,7 +101,7 @@ public class PreCheckUtil {
         return ResponseEntity.status(status).body(precheckResponse);
     }
 
-    public ResponseEntity<PreCheckResponse> handleInvalidIds(String partyId, String municipalityId, String assetType) {
+    public static ResponseEntity<PreCheckResponse> handleInvalidIds(String partyId, String municipalityId, String assetType) {
         logger.error("Invalid partyId or municipalityId provided. PartyId: {}, MunicipalityId: {}", partyId, municipalityId);
         return buildPrecheckResponseEntity(HttpStatus.BAD_REQUEST, assetType, false, "Invalid data provided in the request");
     }
