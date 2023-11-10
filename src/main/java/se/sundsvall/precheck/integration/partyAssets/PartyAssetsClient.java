@@ -1,6 +1,6 @@
 package se.sundsvall.precheck.integration.partyAssets;
 
-import integrations.client.partyAssets.Asset;
+import generated.client.partyAssets.Asset;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +9,10 @@ import se.sundsvall.precheck.integration.partyAssets.configuration.PartyAssetsCo
 
 import java.util.List;
 
+import static se.sundsvall.precheck.integration.partyAssets.configuration.PartyAssetsIntegration.INTEGRATION_NAME;
+
 @FeignClient(
-        value = PartyAssetsConfiguration.CLIENT_ID,
+        value = INTEGRATION_NAME,
         url = "${integration.party-assets.baseUrl}",
         configuration = PartyAssetsConfiguration.class,
         dismiss404 = true

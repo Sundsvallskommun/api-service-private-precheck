@@ -12,10 +12,10 @@ import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 
 import java.util.concurrent.TimeUnit;
 
+import static se.sundsvall.precheck.integration.partyAssets.configuration.PartyAssetsIntegration.INTEGRATION_NAME;
+
 @Import(FeignConfiguration.class)
 public class PartyAssetsConfiguration {
-    public static final String CLIENT_ID = "PartyAssets";
-
     private final PartyAssetsProperties partyAssetsProperties;
 
     public PartyAssetsConfiguration(PartyAssetsProperties partyAssetsProperties) {
@@ -25,14 +25,14 @@ public class PartyAssetsConfiguration {
     @Bean
     public FeignBuilderCustomizer feignBuilderCustomizer() {
         return FeignMultiCustomizer.create()
-                .withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID))
+                .withErrorDecoder(new ProblemErrorDecoder(INTEGRATION_NAME))
                 .withRequestOptions(feignOptions())
                 .withRetryableOAuth2InterceptorForClientRegistration(clientRegistration())
                 .composeCustomizersToOne();
     }
 
     private ClientRegistration clientRegistration() {
-        return ClientRegistration.withRegistrationId(CLIENT_ID)
+        return ClientRegistration.withRegistrationId(INTEGRATION_NAME)
                 .tokenUri(partyAssetsProperties.tokenUrl())
                 .clientId(partyAssetsProperties.oauthClientId())
                 .clientSecret(partyAssetsProperties.oauthClientSecret())

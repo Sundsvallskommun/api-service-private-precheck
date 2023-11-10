@@ -1,7 +1,6 @@
 package se.sundsvall.precheck.integration.citizen.configuration;
 
 import feign.Request;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -14,26 +13,26 @@ import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 
 import java.util.concurrent.TimeUnit;
 
-@Import(FeignConfiguration.class)
 @Getter
-@AllArgsConstructor
+@Import(FeignConfiguration.class)
 public class CitizenConfiguration {
-
-    public static final String CLIENT_ID = "Citizen";
-
     private final CitizenProperties citizenProperties;
+
+    public CitizenConfiguration(CitizenProperties citizenProperties) {
+        this.citizenProperties = citizenProperties;
+    }
 
     @Bean
     public FeignBuilderCustomizer feignBuilderCustomizer() {
         return FeignMultiCustomizer.create()
-                .withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID))
+                .withErrorDecoder(new ProblemErrorDecoder(CitizenIntegration.INTEGRATION_NAME))
                 .withRequestOptions(createFeignOptions())
                 .withRetryableOAuth2InterceptorForClientRegistration(clientRegistration())
                 .composeCustomizersToOne();
     }
 
-    private ClientRegistration clientRegistration() {
-        return ClientRegistration.withRegistrationId(CLIENT_ID)
+    public ClientRegistration clientRegistration() {
+        return ClientRegistration.withRegistrationId(CitizenIntegration.INTEGRATION_NAME)
                 .tokenUri(citizenProperties.tokenUrl())
                 .clientId(citizenProperties.oauthClientId())
                 .clientSecret(citizenProperties.oauthClientSecret())
@@ -41,7 +40,7 @@ public class CitizenConfiguration {
                 .build();
     }
 
-    private Request.Options createFeignOptions() {
+    Request.Options createFeignOptions() {
         return new Request.Options(
                 citizenProperties.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,
                 citizenProperties.readTimeout().toMillis(), TimeUnit.MILLISECONDS,
