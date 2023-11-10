@@ -17,7 +17,6 @@
 
     <properties>
         <!-- Pipeline properties -->
-        <docker.image.name>se.sundsvall/private-preCheck</docker.image.name>
         <generated-sources-java-path>src/main/java</generated-sources-java-path>
         <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
         <!-- Generated sources properties -->
@@ -83,7 +82,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/generated/citizen-api.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/integrations/citizen-api.json</inputSpec>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
@@ -107,7 +106,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/generated/partyAssets-api.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/integrations/partyAssets-api.json</inputSpec>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
                             <generateApis>false</generateApis>
