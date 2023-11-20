@@ -1,15 +1,15 @@
-package se.sundsvall.precheck.integration.partyAssets;
+package se.sundsvall.precheck.integration.partyassets;
 
 import generated.client.partyAssets.Asset;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import se.sundsvall.precheck.integration.partyAssets.configuration.PartyAssetsConfiguration;
+import se.sundsvall.precheck.integration.partyassets.configuration.PartyAssetsConfiguration;
 
 import java.util.List;
 
-import static se.sundsvall.precheck.integration.partyAssets.configuration.PartyAssetsIntegration.INTEGRATION_NAME;
+import static se.sundsvall.precheck.integration.partyassets.configuration.PartyAssetsIntegration.INTEGRATION_NAME;
 
 @FeignClient(
         value = INTEGRATION_NAME,

@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.partyAssets.configuration;
+package se.sundsvall.precheck.integration.partyassets.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

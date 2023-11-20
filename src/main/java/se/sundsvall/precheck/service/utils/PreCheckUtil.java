@@ -4,6 +4,7 @@ import generated.client.citizen.CitizenAddress;
 import generated.client.citizen.CitizenExtended;
 import generated.client.partyAssets.Asset;
 import jakarta.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,52 +12,74 @@ import org.springframework.http.ResponseEntity;
 import org.zalando.problem.Problem;
 import se.sundsvall.precheck.api.model.PreCheckResponse;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static org.zalando.problem.Status.FORBIDDEN;
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static se.sundsvall.precheck.constant.Constants.ASSET_TYPE_EXISTS_ERROR_MESSAGE;
+import static se.sundsvall.precheck.constant.Constants.CORRECT_ADDRESS_TYPE;
+import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
 
 public class PreCheckUtil {
-    public static final String CORRECT_ADDRESS_TYPE = "POPULATION_REGISTRATION_ADDRESS";
-    private static final Logger logger = LoggerFactory.getLogger(PreCheckUtil.class);
-    private static final String NO_VALID_MUNICIPALITY_ID_FOUND = "The owner of the partyId given is not register in the municipality where the permit is requested"; //TODO: Fix a better message
 
-    public static boolean resourceNotFound(ResponseEntity<CitizenExtended> citizen, ResponseEntity<List<Asset>> party) {
-        logger.info("Input data resourceNotFound: Citizen:" + citizen.getStatusCode() + "    Party:" + party.getStatusCode());
-        try {
-            return !(citizen.getStatusCode() == HttpStatus.OK && party.getStatusCode() == HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error occurred while validating in resourceNotFound : \n" + e.getMessage());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PreCheckUtil.class);
+
+    public static boolean checkResourceAvailability(ResponseEntity<CitizenExtended> citizen, ResponseEntity<List<Asset>> party) {
+        if (citizen == null || party == null) {
+            LOGGER.error("Citizen or Party is null during resource availability check");
             return true;
         }
+
+        try {
+            LOGGER.info("Input data checkResourceAvailability: Citizen: {}    Party: {}", citizen.getStatusCode(), party.getStatusCode());
+
+            boolean isCitizenBodyPresent = citizen.getBody() != null && !citizen.getBody().equals(new CitizenExtended());
+            boolean areStatusCodesAcceptable = citizen.getStatusCode() == HttpStatus.OK && party.getStatusCode() == HttpStatus.OK;
+
+            if (isCitizenBodyPresent && areStatusCodesAcceptable) {
+                LOGGER.info("Both citizenBody and partyBody are valid.");
+                return false;
+            }
+            LOGGER.info("Either citizenBody or partyBody is invalid.");
+
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Error occurred while validating in checkResourceAvailability: {}", e.getMessage());
+            return true;
+        }
+
     }
 
-    public static boolean hasInValidMunicipalityId(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
-        var citizen = citizenEntity.getBody();
-
-        if (citizen == null || citizen.getAddresses() == null || municipalityId == null || municipalityId.isEmpty()) {
-            logger.error("Citizen or MunicipalityId is null during municipality ID check");
-            return true;
+    public static boolean containsValidMunicipalityId(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
+        if (municipalityId == null || municipalityId.isEmpty()) {
+            LOGGER.error("MunicipalityId is null or empty during municipality ID check");
+            return false;
         }
 
-        for (var citizenAddress : citizen.getAddresses()) {
-            if (isValidCitizenAddress(citizenAddress, municipalityId)) {
-                logger.info("Municipality ID found during check");
-                return false;
+        CitizenExtended citizen = citizenEntity.getBody();
+        if (citizen == null || citizen.getAddresses() == null) {
+            LOGGER.error("Citizen or addresses is null during municipality ID check");
+            return false;
+        }
+
+        for (CitizenAddress citizenAddress : citizen.getAddresses()) {
+            if (isCorrectCitizenAddress(citizenAddress, municipalityId)) {
+                LOGGER.info("Municipality ID found during check");
+                return true;
             }
         }
 
-        throw Problem.valueOf(FORBIDDEN, NO_VALID_MUNICIPALITY_ID_FOUND);
+        throw Problem.valueOf(BAD_REQUEST, NO_VALID_MUNICIPALITY_ID_FOUND);
     }
 
-    private static boolean isValidCitizenAddress(CitizenAddress citizenAddress, String municipalityId) {
+    private static boolean isCorrectCitizenAddress(CitizenAddress citizenAddress, String municipalityId) {
         var citizenAddressType = citizenAddress.getAddressType();
         var citizenMunicipality = citizenAddress.getMunicipality();
 
         if (citizenAddressType == null || citizenMunicipality == null) {
-            logger.error("CitizenAddress is null during municipality ID check");
+            LOGGER.error("CitizenAddress is null during municipality ID check");
             return false;
         }
 
@@ -64,48 +87,54 @@ public class PreCheckUtil {
             return false;
         }
 
-        logger.info("Looped the citizen: " + citizenAddressType + " != " + CORRECT_ADDRESS_TYPE + " == " + true);
-        logger.info("municipalityId loop " + citizenMunicipality.equals(municipalityId) + " ==  " + citizenMunicipality + municipalityId);
+        LOGGER.info("Looped the citizenAddressType: {} , and the CORRECT_ADDRESS_TYPE: {}", citizenAddressType, CORRECT_ADDRESS_TYPE);
+        LOGGER.info("Looped the citizenMunicipality: {} , and the municipalityId: {}", citizenMunicipality, municipalityId);
 
         return citizenMunicipality.equals(municipalityId);
     }
 
-    public static ResponseEntity<List<PreCheckResponse>> handleAssetType(String assetType, ResponseEntity<List<Asset>> party) {
-        List<Asset> partyBody = party.getBody();
+    public static ResponseEntity<List<PreCheckResponse>> generateAssetTypeResponses(final String assetType, final ResponseEntity<List<Asset>> party) {
 
-        // the difference between null and empty might be important, but I don't know, so I'll leave it as is until I know better - E.p
-        if (partyBody == null || partyBody.isEmpty()) {
-            boolean isNull = partyBody == null;
-            String Message = isNull ? "No assets found for the given partyId" : "No content found for the given partyId";
-            return ResponseEntity.ok(List.of(buildPrecheckResponse(assetType, !isNull, Message)));
+        if (StringUtils.isEmpty(assetType)) {
+            return ResponseEntity.ok(List.of(createPrecheckResponse("", false, "When searching for assetType, assetType must be provided")));
+        }
+        if (party.getBody() == null || party.getBody().isEmpty()) {
+            return ResponseEntity.ok(List.of(createPrecheckResponse(assetType, true, "")));
         }
 
-        boolean assetTypeExists = partyBody.stream()
-                .anyMatch(asset -> asset.getType().equals(assetType));
+        return Optional.ofNullable(party.getBody())
+                .map(assets -> {
+                    boolean assetTypeExists = assets.stream().anyMatch(asset -> asset.getType().equals(assetType));
 
-        if (assetTypeExists) {
-            String errorMessage = String.format("PersonId already has a permit of type '%s' associated with it", assetType);
-            return ResponseEntity.ok(List.of(buildPrecheckResponse(assetType, false, errorMessage)));
-        }
+                    if (assetTypeExists) {
+                        String errorMessage = String.format(ASSET_TYPE_EXISTS_ERROR_MESSAGE, assetType);
+                        return ResponseEntity.ok(List.of(createPrecheckResponse(assetType, false, errorMessage)));
+                    }
 
-        return ResponseEntity.ok(List.of(buildPrecheckResponse(assetType, true, "")));
+                    return ResponseEntity.ok(List.of(createPrecheckResponse(assetType, true, "")));
+                })
+                .orElse(ResponseEntity.ok(List.of(createPrecheckResponse(assetType, true, ""))));
     }
 
-    public static ResponseEntity<List<PreCheckResponse>> handleNoGivenAssetType(ResponseEntity<List<Asset>> party) {
-
+    public static ResponseEntity<List<PreCheckResponse>> generateNoAssetTypeResponses(ResponseEntity<List<Asset>> party) {
         List<Asset> partyBody = party.getBody();
+
         if (partyBody == null || partyBody.isEmpty()) {
             return ResponseEntity.ok(Collections.emptyList());
         }
 
-        List<PreCheckResponse> preCheckResponses = new ArrayList<>();
-        for (var asset : Objects.requireNonNull(partyBody)) {
-            preCheckResponses.add(buildPrecheckResponse(asset.getType(), false, ""));
+        try {
+            List<PreCheckResponse> preCheckResponses = partyBody.stream()
+                    .map(asset -> createPrecheckResponse(asset.getType(), false, ""))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(preCheckResponses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(preCheckResponses);
     }
 
-    public static PreCheckResponse buildPrecheckResponse(String assetType, @NotNull boolean eligible, String message) {
+    public static PreCheckResponse createPrecheckResponse(String assetType, @NotNull boolean eligible, String message) {
         return PreCheckResponse.builder()
                 .withAssetType(assetType)
                 .withEligible(eligible)
