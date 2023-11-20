@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.partyAssets.configuration;
+package se.sundsvall.precheck.integration.partyassets.configuration;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,13 +16,13 @@ class PartyAssetsConfigurationTest {
 
     @Test
     void beanConfigurationAcceptableValuesIsCreated() {
-        final String tokenUrl = "mockTokenUrl";
-        final String clientId = "mockClientId";
-        final String clientSecret = "mockClientSecret";
+        final String TOKEN_URL = "mockTokenUrl";
+        final String CLIENT_ID = "mockClientId";
+        final String CLIENT_SECRET = "mockClientSecret";
 
-        when(mockPartyAssetsProperties.tokenUrl()).thenReturn(tokenUrl);
-        when(mockPartyAssetsProperties.oauthClientId()).thenReturn(clientId);
-        when(mockPartyAssetsProperties.oauthClientSecret()).thenReturn(clientSecret);
+        when(mockPartyAssetsProperties.tokenUrl()).thenReturn(TOKEN_URL);
+        when(mockPartyAssetsProperties.oauthClientId()).thenReturn(CLIENT_ID);
+        when(mockPartyAssetsProperties.oauthClientSecret()).thenReturn(CLIENT_SECRET);
 
         PartyAssetsConfiguration partyAssetsConfiguration = new PartyAssetsConfiguration(mockPartyAssetsProperties);
 

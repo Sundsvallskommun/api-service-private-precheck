@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @Import(FeignConfiguration.class)
 public class CitizenConfiguration {
-    private final CitizenProperties citizenProperties;
+    private final CitizenProperties CITIZEN_PROPERTIES;
 
-    public CitizenConfiguration(CitizenProperties citizenProperties) {
-        this.citizenProperties = citizenProperties;
+    public CitizenConfiguration(CitizenProperties CITIZEN_PROPERTIES) {
+        this.CITIZEN_PROPERTIES = CITIZEN_PROPERTIES;
     }
 
     @Bean
@@ -33,17 +33,17 @@ public class CitizenConfiguration {
 
     public ClientRegistration clientRegistration() {
         return ClientRegistration.withRegistrationId(CitizenIntegration.INTEGRATION_NAME)
-                .tokenUri(citizenProperties.tokenUrl())
-                .clientId(citizenProperties.oauthClientId())
-                .clientSecret(citizenProperties.oauthClientSecret())
+                .tokenUri(CITIZEN_PROPERTIES.tokenUrl())
+                .clientId(CITIZEN_PROPERTIES.oauthClientId())
+                .clientSecret(CITIZEN_PROPERTIES.oauthClientSecret())
                 .authorizationGrantType(new AuthorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue()))
                 .build();
     }
 
     Request.Options createFeignOptions() {
         return new Request.Options(
-                citizenProperties.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,
-                citizenProperties.readTimeout().toMillis(), TimeUnit.MILLISECONDS,
+                CITIZEN_PROPERTIES.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,
+                CITIZEN_PROPERTIES.readTimeout().toMillis(), TimeUnit.MILLISECONDS,
                 false
         );
     }

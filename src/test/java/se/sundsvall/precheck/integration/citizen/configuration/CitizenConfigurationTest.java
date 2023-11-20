@@ -2,33 +2,37 @@ package se.sundsvall.precheck.integration.citizen.configuration;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CitizenConfigurationTest {
 
     @Mock
     private CitizenProperties citizenProperties;
+    @InjectMocks
+    private CitizenConfiguration citizenConfiguration;
 
     @Test
-    void beanConfigurationAcceptableValuesIsCreated() {
-        final String tokenUrl = "mockTokenUrl";
-        final String clientId = "mockClientId";
-        final String clientSecret = "mockClientSecret";
+    void beanConfiguration_AcceptableValuesIsCreated() {
 
-        when(citizenProperties.tokenUrl()).thenReturn(tokenUrl);
-        when(citizenProperties.oauthClientId()).thenReturn(clientId);
-        when(citizenProperties.oauthClientSecret()).thenReturn(clientSecret);
+        final String TOKEN_URL = "mockTokenUrl";
+        final String CLIENT_ID = "mockClientId";
+        final String CLIENT_SECRET = "mockClientSecret";
 
-        CitizenConfiguration citizenConfiguration = new CitizenConfiguration(citizenProperties);
+        when(citizenProperties.tokenUrl()).thenReturn(TOKEN_URL);
+        when(citizenProperties.oauthClientId()).thenReturn(CLIENT_ID);
+        when(citizenProperties.oauthClientSecret()).thenReturn(CLIENT_SECRET);
 
         var results = citizenConfiguration.feignBuilderCustomizer();
-        assertNotNull(results);
 
+        assertNotNull(results);
 
         verify(citizenProperties).tokenUrl();
         verify(citizenProperties).oauthClientId();

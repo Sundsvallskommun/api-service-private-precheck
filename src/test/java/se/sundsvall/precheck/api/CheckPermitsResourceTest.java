@@ -17,7 +17,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 class CheckPermitsResourceTest {
@@ -37,7 +40,7 @@ class CheckPermitsResourceTest {
     }
 
     @Test
-    void getCitizenWithAssetType_returnOneAssetType() throws Exception {
+    void getCitizenWithAssetType_ReturnOneAssetType() throws Exception {
 
         when(preCheckService.checkPermit(anyString(), anyString(), anyString()))
                 .thenReturn(ResponseEntity.ok(Collections.singletonList(
@@ -63,7 +66,7 @@ class CheckPermitsResourceTest {
     }
 
     @Test
-    void getCitizenWithAssetType_returnTwoAssetTypes() throws Exception {
+    void getCitizenWithAssetType_ReturnMultipleAssetTypes() throws Exception {
 
         when(preCheckService.checkPermit(anyString(), anyString(), anyString()))
                 .thenReturn(ResponseEntity.ok(List.of(

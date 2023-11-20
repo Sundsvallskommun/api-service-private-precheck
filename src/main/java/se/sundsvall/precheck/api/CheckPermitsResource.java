@@ -36,27 +36,27 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
         )
 )
 @ApiResponse(
+        responseCode = "404",
+        description = "Not Found",
+        content = @Content(
+                mediaType = APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = Problem.class)
+        )
+)
+@ApiResponse(
         responseCode = "403",
         description = "Forbidden",
         content = @Content(
                 mediaType = APPLICATION_JSON_VALUE,
-                schema = @Schema(anyOf = {Problem.class})
-        )
-)
-@ApiResponse(
-        responseCode = "204",
-        description = "No content",
-        content = @Content(
-                mediaType = APPLICATION_JSON_VALUE,
-                schema = @Schema(anyOf = {Problem.class})
+                schema = @Schema(implementation = Problem.class)
         )
 )
 public class CheckPermitsResource {
 
-    private final PreCheckService preCheckService;
+    private final PreCheckService PRE_CHECK_SERVICE;
 
-    public CheckPermitsResource(PreCheckService preCheckService) {
-        this.preCheckService = preCheckService;
+    public CheckPermitsResource(PreCheckService PRE_CHECK_SERVICE) {
+        this.PRE_CHECK_SERVICE = PRE_CHECK_SERVICE;
     }
 
     @GetMapping(path = "{partyId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE})
@@ -75,10 +75,9 @@ public class CheckPermitsResource {
                     name = "assetType",
                     description = "AssetType for the citizen",
                     example = "PARKING_PERMIT",
-                    allowEmptyValue = true,
-                    required = false
+                    allowEmptyValue = true
             ) final String assetType) {
 
-        return preCheckService.checkPermit(partyId, municipalityId, assetType);
+        return PRE_CHECK_SERVICE.checkPermit(partyId, municipalityId, assetType);
     }
 }

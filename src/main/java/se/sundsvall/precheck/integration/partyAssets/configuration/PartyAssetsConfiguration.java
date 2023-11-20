@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.partyAssets.configuration;
+package se.sundsvall.precheck.integration.partyassets.configuration;
 
 import feign.Request;
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
@@ -12,14 +12,14 @@ import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 
 import java.util.concurrent.TimeUnit;
 
-import static se.sundsvall.precheck.integration.partyAssets.configuration.PartyAssetsIntegration.INTEGRATION_NAME;
+import static se.sundsvall.precheck.integration.partyassets.configuration.PartyAssetsIntegration.INTEGRATION_NAME;
 
 @Import(FeignConfiguration.class)
 public class PartyAssetsConfiguration {
-    private final PartyAssetsProperties partyAssetsProperties;
+    private final PartyAssetsProperties PARTY_ASSETS_PROPERTIES;
 
     public PartyAssetsConfiguration(PartyAssetsProperties partyAssetsProperties) {
-        this.partyAssetsProperties = partyAssetsProperties;
+        this.PARTY_ASSETS_PROPERTIES = partyAssetsProperties;
     }
 
     @Bean
@@ -33,17 +33,17 @@ public class PartyAssetsConfiguration {
 
     private ClientRegistration clientRegistration() {
         return ClientRegistration.withRegistrationId(INTEGRATION_NAME)
-                .tokenUri(partyAssetsProperties.tokenUrl())
-                .clientId(partyAssetsProperties.oauthClientId())
-                .clientSecret(partyAssetsProperties.oauthClientSecret())
+                .tokenUri(PARTY_ASSETS_PROPERTIES.tokenUrl())
+                .clientId(PARTY_ASSETS_PROPERTIES.oauthClientId())
+                .clientSecret(PARTY_ASSETS_PROPERTIES.oauthClientSecret())
                 .authorizationGrantType(new AuthorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue()))
                 .build();
     }
 
     Request.Options feignOptions() {
         return new Request.Options(
-                partyAssetsProperties.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,
-                partyAssetsProperties.readTimeout().toMillis(), TimeUnit.MILLISECONDS,
+                PARTY_ASSETS_PROPERTIES.connectTimeout().toMillis(), TimeUnit.MILLISECONDS,
+                PARTY_ASSETS_PROPERTIES.readTimeout().toMillis(), TimeUnit.MILLISECONDS,
                 false
         );
     }
