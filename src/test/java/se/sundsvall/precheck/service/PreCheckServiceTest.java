@@ -93,7 +93,7 @@ class PreCheckServiceTest {
         );
 
         assertEquals(
-                Problem.valueOf(NOT_FOUND, String.format(NOT_FOUND_ERROR_MESSAGE,TEST_PARTY_ID)).getMessage(),
+                Problem.valueOf(NOT_FOUND, String.format(NOT_FOUND_ERROR_MESSAGE, TEST_PARTY_ID)).getMessage(),
                 exception.getMessage()
         );
         assertEquals(
@@ -126,9 +126,9 @@ class PreCheckServiceTest {
     void IntegrationResponsesTest_NoContentIntegrationResponse() {
         when(citizenClient.getCitizen(eq(TEST_PARTY_ID)))
                 .thenReturn(ResponseEntity.noContent().build());
-
-        when(partyAssetsClient.getPartyAssets(eq(TEST_PARTY_ID), anyString()))
-                .thenReturn(ResponseEntity.noContent().build());
+//
+//        when(partyAssetsClient.getPartyAssets(eq(TEST_PARTY_ID), anyString()))
+//                .thenReturn(ResponseEntity.noContent().build());
 
         Exception exception = assertThrows(
                 Exception.class,

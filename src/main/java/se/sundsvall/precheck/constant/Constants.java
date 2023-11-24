@@ -11,5 +11,4 @@ public class Constants {
     public static final String ASSET_TYPE_EXISTS_ERROR_MESSAGE = "PersonId already has a permit of type '%s' associated with it";
 
 
-
 }
