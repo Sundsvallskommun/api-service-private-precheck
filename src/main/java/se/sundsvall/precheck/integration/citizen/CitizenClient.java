@@ -5,21 +5,19 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import se.sundsvall.precheck.integration.citizen.configuration.CitizenConfiguration;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static se.sundsvall.precheck.integration.citizen.configuration.CitizenIntegration.INTEGRATION_NAME;
 
-@FeignClient(
-        value = INTEGRATION_NAME,
-        url = "${integration.citizen.baseUrl}",
-        configuration = CitizenConfiguration.class,
-        dismiss404 = true
-)
+@FeignClient(name = CitizenIntegration.INTEGRATION_NAME, url = "${integration.citizen.base-url}", configuration = CitizenConfiguration.class)
 public interface CitizenClient {
-    @GetMapping(path = "/{personId}", produces = (APPLICATION_JSON_VALUE))
-    ResponseEntity<CitizenExtended> getCitizen(@PathVariable(name = "personId") final String personId);
 
+    /**
+     * Method for retrieving a citizen.
+     *
+     * @param personId the person ID
+     * @return An object with citizen data.
+     * @throws org.zalando.problem.ThrowableProblem when called service responds with error code.
+     */
+    @GetMapping(path = "/{personId}", produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<CitizenExtended> getCitizen(@PathVariable("personId") String personId);
 }
-
-
