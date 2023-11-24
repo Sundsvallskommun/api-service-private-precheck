@@ -17,7 +17,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.precheck.api.model.PreCheckResponse;
 import se.sundsvall.precheck.integration.citizen.CitizenClient;
-import se.sundsvall.precheck.integration.partyassets.PartyAssetsClient;
+import se.sundsvall.precheck.integration.partyAssets.PartyAssetsClient;
 
 import java.util.List;
 import java.util.stream.Stream;
