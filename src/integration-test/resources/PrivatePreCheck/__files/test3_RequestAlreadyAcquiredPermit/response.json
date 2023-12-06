@@ -1,0 +1,7 @@
+[
+  {
+    "assetType": "PERMIT",
+    "eligible": false,
+    "message": "PersonId already has a permit of type 'PERMIT' associated with it"
+  }
+]
