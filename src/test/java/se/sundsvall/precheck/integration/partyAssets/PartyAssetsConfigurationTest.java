@@ -1,81 +1,40 @@
 package se.sundsvall.precheck.integration.partyAssets;
 
-import generated.client.partyAssets.Asset;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-import se.sundsvall.precheck.api.model.Status;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.Duration;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("junit")
+@SpringBootTest(classes = PartyAssetsConfiguration.class)
 public class PartyAssetsConfigurationTest {
-    @Mock
-    private PartyAssetsClient partyAssetsClient;
+    @Autowired
+    private FeignBuilderCustomizer partyAssetsCustomizer;
 
-    private PartyAssetsIntegration partyAssetsIntegration;
-    private UUID uuid;
+    @Autowired
+    private PartyAssetsProperties properties;
 
-
-    @BeforeEach
-    void setUp() {
-        partyAssetsIntegration = new PartyAssetsIntegration(partyAssetsClient);
-        uuid = UUID.randomUUID();
+    @Test
+    void testPartyAssetsCustomizer() {
+        assertThat(partyAssetsCustomizer).isNotNull();
     }
 
     @Test
-    void getCitizen() {
-        var asset = ResponseEntity.of(Optional.of(List.of(buildAsset())));
-        when(partyAssetsClient.getPartyAssets(any(), any())).thenReturn(asset);
-
-        var response = partyAssetsIntegration.getPartyAssets("someId", Status.ACTIVE);
-
-        assertThat(response).isNotNull().usingRecursiveComparison().isEqualTo(asset);
-
-        verify(partyAssetsClient).getPartyAssets(any(), any());
-        verifyNoMoreInteractions(partyAssetsClient);
-    }
-
-
-    @Test
-    void getCitizenThrowingException() {
-        when(partyAssetsClient.getPartyAssets(any(), any())).thenThrow(new NullPointerException());
-        var response = partyAssetsIntegration.getPartyAssets("someId", Status.ACTIVE);
-
-        assertThat(response).isNotNull().usingRecursiveComparison().isEqualTo(ResponseEntity.notFound().build());
-
-        verify(partyAssetsClient).getPartyAssets(any(), any());
-        verifyNoMoreInteractions(partyAssetsClient);
-
-    }
-
-    private Asset buildAsset() {
-        return new Asset()
-                .id(uuid.toString())
-                .assetId(uuid.toString())
-                .origin("origin")
-                .partyId("partyId")
-                .caseReferenceIds(List.of("caseReferenceIds"))
-                .type("type")
-                .issued(LocalDate.now())
-                .validTo(LocalDate.now())
-                .status(generated.client.partyAssets.Status.ACTIVE)
-                .statusReason("statusReason")
-                .description("description")
-                .additionalParameters(Map.of("key", "value"));
-
+    void propertiesBeanIsCreatedAndHasCorrectValues() {
+        assertThat(properties).isNotNull().isNotEqualTo(new PartyAssetsProperties());
+        assertThat(properties.getBaseUrl()).isEqualTo("http://party-assets.url");
+        assertThat(properties.getOAuth2()).isNotNull().satisfies(oAuth2 -> {
+            assertThat(oAuth2.getTokenUri()).isEqualTo("http://party-assets.token");
+            assertThat(oAuth2.getClientId()).isEqualTo("party-assets-id");
+            assertThat(oAuth2.getClientSecret()).isEqualTo("party-assets-secret");
+            assertThat(oAuth2.getGrantType()).isEqualTo("client_credentials");
+        });
+        assertThat(properties.getConnectTimeout()).isEqualTo(Duration.ofSeconds(7));
+        assertThat(properties.getReadTimeout()).isEqualTo(Duration.ofSeconds(7));
     }
 }
