@@ -16,18 +16,17 @@ import org.springframework.http.ResponseEntity;
 import org.zalando.problem.Problem;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.precheck.api.model.PreCheckResponse;
-import se.sundsvall.precheck.integration.citizen.CitizenClient;
-import se.sundsvall.precheck.integration.partyAssets.PartyAssetsClient;
+import se.sundsvall.precheck.api.model.Status;
+import se.sundsvall.precheck.integration.citizen.CitizenIntegration;
+import se.sundsvall.precheck.integration.partyAssets.PartyAssetsIntegration;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.FORBIDDEN;
@@ -35,14 +34,6 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.precheck.constant.Constants.CORRECT_ADDRESS_TYPE;
 import static se.sundsvall.precheck.constant.Constants.NOT_FOUND_ERROR_MESSAGE;
 import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
-/*
- * Unit tests for the PreCheckService class.
- * These tests cover different scenarios related to permit checks and error handling.
- * - The 'testCheckPermitWithEmptyResponses' test checks the behavior when 2xx status codes are received, but the interrogations have no body content.
- * - The 'testIntegrationErrorCases' test covers various integration error cases, including empty responses and forbidden status codes.
- * - The 'testCheckPermitWithResourceNotFound' test verifies the handling of resource not found scenarios.
- *
- */
 
 @ExtendWith(MockitoExtension.class)
 class PreCheckServiceTest {
@@ -53,9 +44,9 @@ class PreCheckServiceTest {
     private static final CitizenExtended VALID_CITIZEN_RESPONSE = new CitizenExtended();
     private static final Asset VALID_ASSET = new Asset();
     @Mock
-    private CitizenClient citizenClient;
+    private CitizenIntegration citizenIntegration;
     @Mock
-    private PartyAssetsClient partyAssetsClient;
+    private PartyAssetsIntegration partyAssetIntegration;
     @InjectMocks
     private PreCheckService preCheckService;
 
@@ -70,6 +61,8 @@ class PreCheckServiceTest {
 
     @BeforeAll
     public static void setUp() {
+
+
         CitizenAddress validCitizenAddress = new CitizenAddress();
         validCitizenAddress.setAddressType(CORRECT_ADDRESS_TYPE);
         validCitizenAddress.setMunicipality(TEST_MUNICIPALITY_ID);
@@ -81,10 +74,10 @@ class PreCheckServiceTest {
 
     @Test
     void IntegrationResponses_TestEmpty200IntegrationResponses() {
-        when(citizenClient.getCitizen(eq(TEST_PARTY_ID)))
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
                 .thenReturn(ResponseEntity.ok().build());
 
-        when(partyAssetsClient.getPartyAssets(eq(TEST_PARTY_ID), anyString()))
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
                 .thenReturn(ResponseEntity.ok().build());
 
         Exception exception = assertThrows(
@@ -105,8 +98,8 @@ class PreCheckServiceTest {
     @ParameterizedTest
     @MethodSource("errorCases")
     void IntegrationResponsesTest_OneIntegrationErrorCases(ResponseEntity<CitizenExtended> citizenResponse, ResponseEntity<List<Asset>> assetsResponse) {
-        when(citizenClient.getCitizen(eq(TEST_PARTY_ID))).thenReturn(citizenResponse);
-        when(partyAssetsClient.getPartyAssets(eq(TEST_PARTY_ID), anyString())).thenReturn(assetsResponse);
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID)).thenReturn(citizenResponse);
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE)).thenReturn(assetsResponse);
 
         Exception exception = assertThrows(
                 Exception.class,
@@ -124,11 +117,9 @@ class PreCheckServiceTest {
 
     @Test
     void IntegrationResponsesTest_NoContentIntegrationResponse() {
-        when(citizenClient.getCitizen(eq(TEST_PARTY_ID)))
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
                 .thenReturn(ResponseEntity.noContent().build());
-//
-//        when(partyAssetsClient.getPartyAssets(eq(TEST_PARTY_ID), anyString()))
-//                .thenReturn(ResponseEntity.noContent().build());
+
 
         Exception exception = assertThrows(
                 Exception.class,
@@ -147,10 +138,10 @@ class PreCheckServiceTest {
 
     @Test
     void IntegrationResponsesTest_AllValidValues() {
-        when(citizenClient.getCitizen(eq(TEST_PARTY_ID)))
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
                 .thenReturn(ResponseEntity.ok(VALID_CITIZEN_RESPONSE));
 
-        when(partyAssetsClient.getPartyAssets(eq(TEST_PARTY_ID), anyString()))
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
                 .thenReturn(ResponseEntity.ok(List.of(VALID_ASSET)));
 
         ResponseEntity<List<PreCheckResponse>> result = preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE);
@@ -169,9 +160,9 @@ class PreCheckServiceTest {
     @Test
     void ResponseTest_WithoutGivenAssetType() {
 
-        when(citizenClient.getCitizen(eq(TEST_PARTY_ID)))
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
                 .thenReturn(ResponseEntity.ok(VALID_CITIZEN_RESPONSE));
-        when(partyAssetsClient.getPartyAssets(eq(TEST_PARTY_ID), anyString()))
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
                 .thenReturn(ResponseEntity.ok(List.of(
                         VALID_ASSET,
                         new Asset().type(OTHER_ASSET_TYPE)
@@ -199,9 +190,9 @@ class PreCheckServiceTest {
         badMunicipalityIdAddress.setMunicipality("invalidMunicipalityId");
         badMunicipalityIdCitizen.setAddresses(List.of(badMunicipalityIdAddress));
 
-        when(citizenClient.getCitizen(eq(TEST_PARTY_ID)))
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
                 .thenReturn(ResponseEntity.ok(badMunicipalityIdCitizen));
-        when(partyAssetsClient.getPartyAssets(eq(TEST_PARTY_ID), anyString()))
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
                 .thenReturn(ResponseEntity.ok(List.of(VALID_ASSET)));
 
         Exception exception = assertThrows(
@@ -219,7 +210,5 @@ class PreCheckServiceTest {
                 problem.getMessage(),
                 exception.getMessage()
         );
-
     }
-
 }
