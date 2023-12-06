@@ -32,7 +32,7 @@ class CheckPermitsIT extends AbstractAppTest {
     }
 
     @Test
-    void test1_ListResponse() {
+    void test1_ListPermitsResponse() {
         setupCall()
                 .withServicePath(String.format(TEMPLATE_SERVICE_PATH, VALID_PRE_CHECK_ID, VALID_MUNICIPALITY_ID, ""))
                 .withHttpMethod(HttpMethod.GET)
@@ -43,7 +43,7 @@ class CheckPermitsIT extends AbstractAppTest {
     }
 
     @Test
-    void test2_AssetTypeResponse() {
+    void test2_SpecificAssetTypeQueryResponse() {
         setupCall()
                 .withServicePath(String.format(TEMPLATE_SERVICE_PATH, VALID_PRE_CHECK_ID, VALID_MUNICIPALITY_ID, "PERMIT_NAME"))
                 .withHttpMethod(HttpMethod.GET)
@@ -67,7 +67,7 @@ class CheckPermitsIT extends AbstractAppTest {
     @Test
     void test4_QueryBadMunicipalityId() {
         setupCall()
-                .withServicePath(String.format(TEMPLATE_SERVICE_PATH, VALID_PRE_CHECK_ID, "12456", "PERMIT_NAME"))
+                .withServicePath(String.format(TEMPLATE_SERVICE_PATH, VALID_PRE_CHECK_ID, "12456", ""))
                 .withHttpMethod(HttpMethod.GET)
                 .withExpectedResponseStatus(HttpStatus.BAD_REQUEST)
                 .withExpectedResponse("response.json")

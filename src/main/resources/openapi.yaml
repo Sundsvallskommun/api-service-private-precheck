@@ -1,0 +1,124 @@
+openapi: 3.0.1
+info:
+  title: private-preCheck
+  contact: { }
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: "0.5"
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+tags:
+  - name: Check Permit(s)
+    description: Check if a partyId is eligible for applying for a permit
+paths:
+  /api-docs:
+    get:
+      tags:
+        - API
+      summary: OpenAPI
+      operationId: getApiDocs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/yaml:
+              schema:
+                type: string
+      x-auth-type: None
+      x-throttling-tier: Unlimited
+      x-wso2-mutual-ssl: Optional
+  /PreCheck/{partyId}:
+    get:
+      tags:
+        - Check Permit(s)
+      operationId: checkPermit
+      parameters:
+        - name: partyId
+          in: path
+          description: PartyId for the citizen
+          required: true
+          schema:
+            type: string
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        - name: municipalityId
+          in: query
+          description: MunicipalityId for the citizen
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: assetType
+          in: query
+          description: AssetType for the citizen
+          required: true
+          allowEmptyValue: true
+          schema:
+            type: string
+          example: PARKING_PERMIT
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreCheckResponse'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  schemas:
+    PreCheckResponse:
+      type: object
+      properties:
+        assetType:
+          type: string
+          description: The type of asset
+          example: PERMIT
+        eligible:
+          type: boolean
+          description: If the permit(s) are eligible
+          example: false
+        message:
+          type: string
+          description: "Extra message about the return data, for instance why Orderable\
+            \ was false"
+          example: String
+    Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        status:
+          $ref: '#/components/schemas/StatusType'
+        title:
+          type: string
+        detail:
+          type: string
+    StatusType:
+      type: object
+      properties:
+        reasonPhrase:
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+  securitySchemes: { }
