@@ -22,7 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
 @RestController
-@RequestMapping("/PreCheck/")
+@RequestMapping("/PreCheck")
 @Tag(
         name = "Check Permit(s)",
         description = "Check if a partyId is eligible for applying for a permit"
@@ -59,7 +59,7 @@ public class CheckPermitsResource {
         this.PRE_CHECK_SERVICE = PRE_CHECK_SERVICE;
     }
 
-    @GetMapping(path = "{partyId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE})
+    @GetMapping(path = "/{partyId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE})
     public ResponseEntity<List<PreCheckResponse>> checkPermit(
             @Parameter(
                     name = "partyId",
