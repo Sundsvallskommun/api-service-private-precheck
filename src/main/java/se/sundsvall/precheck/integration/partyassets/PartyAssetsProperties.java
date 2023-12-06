@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.partyAssets;
+package se.sundsvall.precheck.integration.partyassets;
 
 import lombok.Getter;
 import lombok.Setter;

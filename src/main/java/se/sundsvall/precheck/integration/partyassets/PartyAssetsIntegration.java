@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.partyAssets;
+package se.sundsvall.precheck.integration.partyassets;
 
 import generated.client.partyAssets.Asset;
 import org.slf4j.Logger;

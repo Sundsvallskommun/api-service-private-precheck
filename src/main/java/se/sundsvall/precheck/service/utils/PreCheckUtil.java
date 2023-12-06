@@ -46,7 +46,7 @@ public class PreCheckUtil {
 
             return true;
         } catch (Exception e) {
-            LOGGER.error("Error occurred while validating in checkResourceAvailability: {}", e.getMessage());
+            LOGGER.error(String.format("Error occurred while validating in checkResourceAvailability: %s", e.getMessage()));
             return true;
         }
 
@@ -87,8 +87,8 @@ public class PreCheckUtil {
             return false;
         }
 
-        LOGGER.info("Looped the citizenAddressType: {} , and the CORRECT_ADDRESS_TYPE: {}", citizenAddressType, CORRECT_ADDRESS_TYPE);
-        LOGGER.info("Looped the citizenMunicipality: {} , and the municipalityId: {}", citizenMunicipality, municipalityId);
+        LOGGER.info(String.format("Looped the citizenAddressType: %s , and the CORRECT_ADDRESS_TYPE: %s", citizenAddressType, CORRECT_ADDRESS_TYPE));
+        LOGGER.info(String.format("Looped the citizenMunicipality: %s , and the municipalityId: %s", citizenMunicipality, municipalityId));
 
         return citizenMunicipality.equals(municipalityId);
     }
