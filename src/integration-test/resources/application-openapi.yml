@@ -1,0 +1,12 @@
+config:
+  integration:
+    citizen:
+      client-id: override
+      client-secret: override
+      token-url: http://nowhere.com
+      url: http://nowhere.com
+    partyAssets:
+      client-id: override
+      client-secret: override
+      token-url: http://nowhere.com
+      url: http://nowhere.com

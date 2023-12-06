@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/citizen/d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"personId\":\"d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee\",\"givenname\":\"Jakob\",\"lastname\":\"Melander\",\"gender\":\"M\",\"civilStatus\":\"OG\",\"nrDate\":\"20201002\",\"classified\":\"N\",\"protectedNR\":\"N\",\"addresses\":[{\"realEstateDescription\":\"KATARINA 4\",\"address\":\"SOFIAVÄGEN 18\",\"postalCode\":\"856 43\",\"city\":\"SUNDSVALL\",\"municipality\":\"2281\",\"country\":\"SVERIGE\",\"emigrated\":false,\"addressType\":\"POPULATION_REGISTRATION_ADDRESS\"}]}"
+  }
+}
