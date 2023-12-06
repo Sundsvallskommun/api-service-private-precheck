@@ -9,7 +9,7 @@ import org.zalando.problem.Problem;
 import se.sundsvall.precheck.api.model.PreCheckResponse;
 import se.sundsvall.precheck.api.model.Status;
 import se.sundsvall.precheck.integration.citizen.CitizenIntegration;
-import se.sundsvall.precheck.integration.partyAssets.PartyAssetsIntegration;
+import se.sundsvall.precheck.integration.partyassets.PartyAssetsIntegration;
 
 import java.util.List;
 

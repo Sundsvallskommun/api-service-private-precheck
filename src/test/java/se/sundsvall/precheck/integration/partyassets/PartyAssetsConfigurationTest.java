@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.partyAssets;
+package se.sundsvall.precheck.integration.partyassets;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

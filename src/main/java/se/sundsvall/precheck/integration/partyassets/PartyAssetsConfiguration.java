@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.partyAssets;
+package se.sundsvall.precheck.integration.partyassets;
 
 import feign.Request;
 import feign.codec.ErrorDecoder;

@@ -1,4 +1,4 @@
-package se.sundsvall.precheck.integration.partyAssets;
+package se.sundsvall.precheck.integration.partyassets;
 
 import generated.client.partyAssets.Asset;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static se.sundsvall.precheck.integration.partyAssets.PartyAssetsIntegration.INTEGRATION_NAME;
+import static se.sundsvall.precheck.integration.partyassets.PartyAssetsIntegration.INTEGRATION_NAME;
 
 @FeignClient(
         value = INTEGRATION_NAME,
