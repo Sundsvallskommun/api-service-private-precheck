@@ -28,13 +28,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.BAD_GATEWAY;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.FORBIDDEN;
 import static org.zalando.problem.Status.NOT_FOUND;
+import static org.zalando.problem.Status.TOO_MANY_REQUESTS;
 import static se.sundsvall.precheck.constant.Constants.CORRECT_ADDRESS_TYPE;
 import static se.sundsvall.precheck.constant.Constants.NOT_FOUND_ERROR_MESSAGE;
 import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
 
+/**
+ * Test methods:
+ * - IntegrationResponsesTest_AllValidValues(): Tests scenarios with all valid values.
+ * - ResponseTest_WithoutGivenAssetType(): Tests response scenarios without a given asset type.
+ * - IntegrationResponses_TestEmpty200IntegrationResponses(): Tests behavior with empty 200 integration responses.
+ * - IntegrationResponsesTest_OneIntegrationErrorCases(): Parameterized test for one integration error cases.
+ * - ResponseTest_InvalidMunicipalityId(): Tests scenarios with an invalid municipality ID.
+ */
 @ExtendWith(MockitoExtension.class)
 class PreCheckServiceTest {
     private static final String TEST_PARTY_ID = "testPartyId";
@@ -52,17 +62,31 @@ class PreCheckServiceTest {
 
     private static Stream<Arguments> errorCases() {
         return Stream.of(
+                // One response is an error response
                 Arguments.of(ResponseEntity.noContent().build(), ResponseEntity.ok().build()),
                 Arguments.of(ResponseEntity.ok().build(), ResponseEntity.noContent().build()),
                 Arguments.of(ResponseEntity.status(FORBIDDEN.getStatusCode()).build(), ResponseEntity.ok().build()),
-                Arguments.of(ResponseEntity.ok().build(), ResponseEntity.status(FORBIDDEN.getStatusCode()).build())
+                Arguments.of(ResponseEntity.ok().build(), ResponseEntity.status(FORBIDDEN.getStatusCode()).build()),
+                Arguments.of(ResponseEntity.status(NOT_FOUND.getStatusCode()).build(), ResponseEntity.ok().build()),
+                Arguments.of(ResponseEntity.ok().build(), ResponseEntity.status(NOT_FOUND.getStatusCode()).build()),
+                Arguments.of(ResponseEntity.status(BAD_REQUEST.getStatusCode()).build(), ResponseEntity.ok().build()),
+                Arguments.of(ResponseEntity.ok().build(), ResponseEntity.status(BAD_REQUEST.getStatusCode()).build()),
+                Arguments.of(ResponseEntity.status(TOO_MANY_REQUESTS.getStatusCode()).build(), ResponseEntity.ok().build()),
+                Arguments.of(ResponseEntity.ok().build(), ResponseEntity.status(TOO_MANY_REQUESTS.getStatusCode()).build()),
+                Arguments.of(ResponseEntity.status(BAD_GATEWAY.getStatusCode()).build(), ResponseEntity.ok().build()),
+                Arguments.of(ResponseEntity.ok().build(), ResponseEntity.status(BAD_GATEWAY.getStatusCode()).build()),
+
+                // Both responses are error responses
+                Arguments.of(ResponseEntity.status(BAD_REQUEST.getStatusCode()).build(), ResponseEntity.status(BAD_REQUEST.getStatusCode()).build()),
+                Arguments.of(ResponseEntity.status(FORBIDDEN.getStatusCode()).build(), ResponseEntity.status(FORBIDDEN.getStatusCode()).build()),
+                Arguments.of(ResponseEntity.status(NOT_FOUND.getStatusCode()).build(), ResponseEntity.status(NOT_FOUND.getStatusCode()).build()),
+                Arguments.of(ResponseEntity.status(TOO_MANY_REQUESTS.getStatusCode()).build(), ResponseEntity.status(TOO_MANY_REQUESTS.getStatusCode()).build()),
+                Arguments.of(ResponseEntity.status(BAD_GATEWAY.getStatusCode()).build(), ResponseEntity.status(BAD_GATEWAY.getStatusCode()).build())
         );
     }
 
     @BeforeAll
     public static void setUp() {
-
-
         CitizenAddress validCitizenAddress = new CitizenAddress();
         validCitizenAddress.setAddressType(CORRECT_ADDRESS_TYPE);
         validCitizenAddress.setMunicipality(TEST_MUNICIPALITY_ID);
@@ -70,72 +94,6 @@ class PreCheckServiceTest {
 
         VALID_ASSET.setType(TEST_ASSET_TYPE);
     }
-
-
-    @Test
-    void IntegrationResponses_TestEmpty200IntegrationResponses() {
-        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
-                .thenReturn(ResponseEntity.ok().build());
-
-        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
-                .thenReturn(ResponseEntity.ok().build());
-
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE)
-        );
-
-        assertEquals(
-                Problem.valueOf(NOT_FOUND, String.format(NOT_FOUND_ERROR_MESSAGE, TEST_PARTY_ID)).getMessage(),
-                exception.getMessage()
-        );
-        assertEquals(
-                Problem.valueOf(NOT_FOUND).getStatus(),
-                ((Problem) exception).getStatus()
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("errorCases")
-    void IntegrationResponsesTest_OneIntegrationErrorCases(ResponseEntity<CitizenExtended> citizenResponse, ResponseEntity<List<Asset>> assetsResponse) {
-        when(citizenIntegration.getCitizen(TEST_PARTY_ID)).thenReturn(citizenResponse);
-        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE)).thenReturn(assetsResponse);
-
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE)
-        );
-
-        assertProblemWithNoContent(exception);
-    }
-
-    private void assertProblemWithNoContent(Exception e) {
-        assertEquals(Problem.valueOf(NOT_FOUND, String.format(NOT_FOUND_ERROR_MESSAGE, TEST_PARTY_ID)).getMessage(), e.getMessage());
-        assertEquals(Problem.valueOf(NOT_FOUND).getStatus(), ((Problem) e).getStatus());
-    }
-
-
-    @Test
-    void IntegrationResponsesTest_NoContentIntegrationResponse() {
-        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
-                .thenReturn(ResponseEntity.noContent().build());
-
-
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE)
-        );
-        assertEquals(
-                Problem.valueOf(NOT_FOUND, String.format(NOT_FOUND_ERROR_MESSAGE, TEST_PARTY_ID)).getMessage(),
-                exception.getMessage()
-        );
-        assertEquals(
-                Problem.valueOf(NOT_FOUND).getStatus(),
-                ((Problem) exception).getStatus()
-        );
-
-    }
-
     @Test
     void IntegrationResponsesTest_AllValidValues() {
         when(citizenIntegration.getCitizen(TEST_PARTY_ID))
@@ -180,6 +138,48 @@ class PreCheckServiceTest {
             assertFalse(responseBody.isEligible());
             assertEquals("", responseBody.getMessage());
         }
+    }
+
+    @Test
+    void IntegrationResponses_TestEmpty200IntegrationResponses() {
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
+                .thenReturn(ResponseEntity.ok().build());
+
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
+                .thenReturn(ResponseEntity.ok().build());
+
+        Exception exception = assertThrows(
+                Exception.class,
+                () -> preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE)
+        );
+
+        assertEquals(
+                Problem.valueOf(NOT_FOUND, String.format(NOT_FOUND_ERROR_MESSAGE, TEST_PARTY_ID)).getMessage(),
+                exception.getMessage()
+        );
+        assertEquals(
+                Problem.valueOf(NOT_FOUND).getStatus(),
+                ((Problem) exception).getStatus()
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("errorCases")
+    void IntegrationResponsesTest_OneIntegrationErrorCases(ResponseEntity<CitizenExtended> citizenResponse, ResponseEntity<List<Asset>> assetsResponse) {
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID)).thenReturn(citizenResponse);
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE)).thenReturn(assetsResponse);
+
+        Exception exception = assertThrows(
+                Exception.class,
+                () -> preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE)
+        );
+
+        assertProblemWithNoContent(exception);
+    }
+
+    private void assertProblemWithNoContent(Exception e) {
+        assertEquals(Problem.valueOf(NOT_FOUND, String.format(NOT_FOUND_ERROR_MESSAGE, TEST_PARTY_ID)).getMessage(), e.getMessage());
+        assertEquals(Problem.valueOf(NOT_FOUND).getStatus(), ((Problem) e).getStatus());
     }
 
     @Test
