@@ -26,18 +26,18 @@ import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateNoAssetTy
 public final class PreCheckService {
 
     static final Logger LOGGER = LoggerFactory.getLogger(PreCheckService.class);
-    private final CitizenIntegration CITIZEN_INTEGRATION;
-    private final PartyAssetsIntegration PARTY_ASSETS_INTEGRATION;
+    private final CitizenIntegration citizenIntegration;
+    private final PartyAssetsIntegration partyAssetsIntegration;
 
 
-    public PreCheckService(CitizenIntegration CITIZEN_INTEGRATION, PartyAssetsIntegration PARTY_ASSETS_INTEGRATION) {
-        this.CITIZEN_INTEGRATION = CITIZEN_INTEGRATION;
-        this.PARTY_ASSETS_INTEGRATION = PARTY_ASSETS_INTEGRATION;
+    public PreCheckService(CitizenIntegration citizenIntegration, PartyAssetsIntegration partyAssetsIntegration) {
+        this.citizenIntegration = citizenIntegration;
+        this.partyAssetsIntegration = partyAssetsIntegration;
     }
 
     public ResponseEntity<List<PreCheckResponse>> checkPermit(String partyId, String municipalityId, final String assetType) {
-        final var citizen = CITIZEN_INTEGRATION.getCitizen(partyId);
-        final var partyAssets = PARTY_ASSETS_INTEGRATION.getPartyAssets(partyId, Status.ACTIVE);
+        final var citizen = citizenIntegration.getCitizen(partyId);
+        final var partyAssets = partyAssetsIntegration.getPartyAssets(partyId, Status.ACTIVE);
 
         if (checkResourceAvailability(citizen, partyAssets)) {
             LOGGER.error("Citizen or Party is null or had no content during resource availability check");

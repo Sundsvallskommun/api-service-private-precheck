@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = PartyAssetsConfiguration.class)
-public class PartyAssetsConfigurationTest {
+class PartyAssetsConfigurationTest {
     @Autowired
     private FeignBuilderCustomizer partyAssetsCustomizer;
 

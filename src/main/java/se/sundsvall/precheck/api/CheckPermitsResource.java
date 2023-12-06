@@ -53,10 +53,10 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 )
 public class CheckPermitsResource {
 
-    private final PreCheckService PRE_CHECK_SERVICE;
+    private final PreCheckService preCheckService;
 
-    public CheckPermitsResource(PreCheckService PRE_CHECK_SERVICE) {
-        this.PRE_CHECK_SERVICE = PRE_CHECK_SERVICE;
+    public CheckPermitsResource(PreCheckService preCheckService) {
+        this.preCheckService = preCheckService;
     }
 
     @GetMapping(path = "/{partyId}", produces = {APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE})
@@ -78,6 +78,6 @@ public class CheckPermitsResource {
                     allowEmptyValue = true
             ) final String assetType) {
 
-        return PRE_CHECK_SERVICE.checkPermit(partyId, municipalityId, assetType);
+        return preCheckService.checkPermit(partyId, municipalityId, assetType);
     }
 }
