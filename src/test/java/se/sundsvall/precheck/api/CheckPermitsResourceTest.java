@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -90,6 +89,6 @@ class CheckPermitsResourceTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2));
 
-        verify(preCheckService, times(1)).checkPermit(eq(PARTY_ID), eq(MUNICIPALITY_ID), eq(""));
+        verify(preCheckService, times(1)).checkPermit(PARTY_ID, MUNICIPALITY_ID, "");
     }
 }
