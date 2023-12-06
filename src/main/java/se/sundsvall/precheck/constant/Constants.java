@@ -10,5 +10,7 @@ public class Constants {
     public static final String NO_VALID_MUNICIPALITY_ID_FOUND = "The owner of the given partyId is not register in the municipality where the permit is requested";
     public static final String ASSET_TYPE_EXISTS_ERROR_MESSAGE = "PersonId already has a permit of type '%s' associated with it";
 
-
+    private Constants() {
+        throw new AssertionError("Constants class should not be instantiated.");
+    }
 }

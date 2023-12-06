@@ -23,9 +23,11 @@ import static se.sundsvall.precheck.constant.Constants.CORRECT_ADDRESS_TYPE;
 import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
 
 public class PreCheckUtil {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(PreCheckUtil.class);
 
+    private PreCheckUtil() {
+        throw new IllegalStateException("Utility class");
+    }
     public static boolean checkResourceAvailability(ResponseEntity<CitizenExtended> citizen, ResponseEntity<List<Asset>> party) {
         if (citizen == null || party == null) {
             LOGGER.error("Citizen or Party is null during resource availability check");
