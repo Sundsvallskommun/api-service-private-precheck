@@ -5,7 +5,7 @@
     <parent>
         <groupId>se.sundsvall.dept44</groupId>
         <artifactId>dept44-service-parent</artifactId>
-        <version>3.2</version>
+        <version>3.4</version>
         <relativePath/>
     </parent>
     <!-- lookup parent from repository -->
@@ -42,18 +42,8 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
+
         <!-- Auth -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-jwt</artifactId>
-            <version>${spring-security-jwt.version}</version>
-        </dependency>
         <dependency>
             <groupId>se.sundsvall.dept44</groupId>
             <artifactId>dept44-common-validators</artifactId>
@@ -126,6 +116,20 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**se/sundsvall/precheck/Application*</exclude>
+                        <exclude>**/se/sundsvall/precheck/integration/**/*Properties*</exclude>
+                        <exclude>**/se/sundsvall/precheck/api/model/**</exclude>
+                        <exclude>**/se/sundsvall/precheck/constant/**</exclude>
+                        <exclude>**/generated/**</exclude>
+                    </excludes>
+                    <outputDirectory>target/jacoco-report</outputDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>
