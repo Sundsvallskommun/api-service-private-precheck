@@ -1,5 +1,5 @@
 {
   "title": "Bad Request",
   "status": 400,
-  "detail": "The owner of the partyId given is not register in the municipality where the permit is requested"
+  "detail": "The owner of the given partyId is not register in the municipality where the permit is requested"
 }
