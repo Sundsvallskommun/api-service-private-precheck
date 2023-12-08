@@ -1,6 +1,6 @@
 package se.sundsvall.precheck.constant;
 
-public class Constants {
+public final class Constants {
     // Used in PreCheckService.java
     public static final String INVALID_MUNICIPALITY_ID = "The owner of the partyId '%s' is not registered in the municipality where the permit is requested";
 
@@ -11,6 +11,6 @@ public class Constants {
     public static final String ASSET_TYPE_EXISTS_ERROR_MESSAGE = "PersonId already has a permit of type '%s' associated with it";
 
     private Constants() {
-        throw new AssertionError("Constants class should not be instantiated.");
+        throw new AssertionError("Constants class should not be instantiated");
     }
 }
