@@ -24,9 +24,9 @@ import static org.mockito.Mockito.when;
 
 class CheckPermitsResourceTest {
 
-    final String PARTY_ID = "testPartyId";
-    final String MUNICIPALITY_ID = "58917";
-    final String ASSET_TYPE = "PARKING_PERMIT";
+    private static final String PARTY_ID = "testPartyId";
+    private static final String MUNICIPALITY_ID = "58917";
+    private static final String ASSET_TYPE = "PARKING_PERMIT";
     private MockMvc mockMvc;
     @Mock
     private PreCheckService preCheckService;

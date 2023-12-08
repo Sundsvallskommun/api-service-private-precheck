@@ -44,8 +44,8 @@ class OpenApiSpecificationIT {
 
     @Test
     void compareOpenApiSpecifications() {
-        String existingOpenApiSpecification = ResourceUtils.asString(openApiResource);
-        String currentOpenApiSpecification = getCurrentOpenApiSpecification();
+        var existingOpenApiSpecification = ResourceUtils.asString(openApiResource);
+        var currentOpenApiSpecification = getCurrentOpenApiSpecification();
 
         assertThatJson(toJson(existingOpenApiSpecification))
                 .withOptions(List.of(Option.IGNORING_ARRAY_ORDER))

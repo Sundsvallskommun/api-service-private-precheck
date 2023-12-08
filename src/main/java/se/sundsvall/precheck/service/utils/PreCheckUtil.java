@@ -22,12 +22,13 @@ import static se.sundsvall.precheck.constant.Constants.ASSET_TYPE_EXISTS_ERROR_M
 import static se.sundsvall.precheck.constant.Constants.CORRECT_ADDRESS_TYPE;
 import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
 
-public class PreCheckUtil {
+public final class PreCheckUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(PreCheckUtil.class);
 
     private PreCheckUtil() {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("PreCheckUtil should not be instantiated");
     }
+
     public static boolean checkResourceAvailability(ResponseEntity<CitizenExtended> citizen, ResponseEntity<List<Asset>> party) {
         if (citizen == null || party == null) {
             LOGGER.error("Citizen or Party is null during resource availability check");
@@ -41,20 +42,23 @@ public class PreCheckUtil {
             boolean areStatusCodesAcceptable = citizen.getStatusCode() == HttpStatus.OK && party.getStatusCode() == HttpStatus.OK;
 
             if (isCitizenBodyPresent && areStatusCodesAcceptable) {
-                LOGGER.info("Both citizenBody and partyBody are valid.");
+                LOGGER.info("Both Citizen and PartyAssets are valid.");
                 return false;
             }
-            LOGGER.info("Either citizenBody or partyBody is invalid.");
-
+            LOGGER.info("Either Citizen or PartyAssets is invalid.");
             return true;
         } catch (Exception e) {
             LOGGER.error("Error occurred while validating in checkResourceAvailability: {}", e.getMessage());
             return true;
         }
-
     }
 
     public static boolean containsValidMunicipalityId(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
+        if (citizenEntity == null || citizenEntity.getBody() == null) {
+            LOGGER.error("Citizen is null during municipality ID check");
+            return false;
+        }
+
         if (municipalityId == null || municipalityId.isEmpty()) {
             LOGGER.error("MunicipalityId is null or empty during municipality ID check");
             return false;

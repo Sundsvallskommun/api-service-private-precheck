@@ -9,5 +9,5 @@ import se.sundsvall.precheck.integration.AbstractIntegrationProperties;
 @Setter
 @ConfigurationProperties(prefix = "integration.citizen")
 class CitizenIntegrationProperties extends AbstractIntegrationProperties {
-    private OAuth2 oAuth2 = new OAuth2();
+    private final OAuth2 oAuth2 = new OAuth2();
 }

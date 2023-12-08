@@ -25,7 +25,7 @@ import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateNoAssetTy
 @Service
 public final class PreCheckService {
 
-    static final Logger LOGGER = LoggerFactory.getLogger(PreCheckService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PreCheckService.class);
     private final CitizenIntegration citizenIntegration;
     private final PartyAssetsIntegration partyAssetsIntegration;
 

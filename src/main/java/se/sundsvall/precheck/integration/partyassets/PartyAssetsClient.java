@@ -18,7 +18,7 @@ import static se.sundsvall.precheck.integration.partyassets.PartyAssetsIntegrati
 )
 public interface PartyAssetsClient {
 
-    @GetMapping(path = "assets", produces = "application/json")
+    @GetMapping(path = "/assets", produces = "application/json")
     ResponseEntity<List<Asset>> getPartyAssets(@RequestParam(name = "partyId") String partyId,
                                                @RequestParam(name = "status") String status);
 }
