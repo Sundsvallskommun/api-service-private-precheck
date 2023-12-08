@@ -1,8 +1,5 @@
 package apptest;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -16,20 +13,10 @@ import se.sundsvall.precheck.Application;
 )
 class CheckPermitsIT extends AbstractAppTest {
 
-    private final String VALID_PRE_CHECK_ID = "d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee";
-    private final String VALID_MUNICIPALITY_ID = "2281";
-    private final String TEMPLATE_SERVICE_PATH = "/PreCheck/%s?municipalityId=%s&assetType=%s";
+    private static final String VALID_PRE_CHECK_ID = "d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee";
+    private static final String VALID_MUNICIPALITY_ID = "2281";
+    private static final String TEMPLATE_SERVICE_PATH = "/PreCheck/%s?municipalityId=%s&assetType=%s";
 
-    @BeforeEach
-    void setUp() {
-        CommonStubs.stubForAccessToken();
-    }
-
-    @AfterEach
-    void tearDown() {
-        verifyAllStubs();
-        WireMock.resetAllRequests();
-    }
 
     @Test
     void test1_ListPermitsResponse() {
