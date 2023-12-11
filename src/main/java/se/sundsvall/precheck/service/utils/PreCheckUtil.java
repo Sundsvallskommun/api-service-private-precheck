@@ -9,13 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import org.zalando.problem.Problem;
 import se.sundsvall.precheck.api.model.PreCheckResponse;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.precheck.constant.Constants.ASSET_TYPE_EXISTS_ERROR_MESSAGE;
@@ -46,11 +46,10 @@ public final class PreCheckUtil {
                 return false;
             }
             LOGGER.info("Either Citizen or PartyAssets is invalid.");
-            return true;
         } catch (Exception e) {
             LOGGER.error("Error occurred while validating in checkResourceAvailability: {}", e.getMessage());
-            return true;
         }
+        return true;
     }
 
     public static boolean containsValidMunicipalityId(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
@@ -99,13 +98,13 @@ public final class PreCheckUtil {
         return citizenMunicipality.equals(municipalityId);
     }
 
-    public static ResponseEntity<List<PreCheckResponse>> generateAssetTypeResponses(final String assetType, final ResponseEntity<List<Asset>> party) {
+    public static List<PreCheckResponse> generateAssetTypeResponses(final String assetType, final ResponseEntity<List<Asset>> party) {
 
         if (StringUtils.isEmpty(assetType)) {
-            return ResponseEntity.ok(List.of(createPrecheckResponse("", false, "When searching for assetType, assetType must be provided")));
+            return List.of(createPrecheckResponse("", false, "When searching for assetType, assetType must be provided"));
         }
         if (party.getBody() == null || party.getBody().isEmpty()) {
-            return ResponseEntity.ok(List.of(createPrecheckResponse(assetType, true, "")));
+            return List.of(createPrecheckResponse(assetType, true, ""));
         }
 
         return Optional.ofNullable(party.getBody())
@@ -114,31 +113,34 @@ public final class PreCheckUtil {
 
                     if (assetTypeExists) {
                         String errorMessage = String.format(ASSET_TYPE_EXISTS_ERROR_MESSAGE, assetType);
-                        return ResponseEntity.ok(List.of(createPrecheckResponse(assetType, false, errorMessage)));
+                        return (List.of(createPrecheckResponse(assetType, false, errorMessage)));
                     }
 
-                    return ResponseEntity.ok(List.of(createPrecheckResponse(assetType, true, "")));
+                    return  List.of(createPrecheckResponse(assetType, true, ""));
                 })
-                .orElse(ResponseEntity.ok(List.of(createPrecheckResponse(assetType, true, ""))));
+                .orElse(List.of(createPrecheckResponse(assetType, true, "")));
     }
 
-    public static ResponseEntity<List<PreCheckResponse>> generateNoAssetTypeResponses(ResponseEntity<List<Asset>> party) {
+    public static List<PreCheckResponse> generateNoAssetTypeResponses(ResponseEntity<List<Asset>> party) {
         List<Asset> partyBody = party.getBody();
 
         if (partyBody == null || partyBody.isEmpty()) {
-            return ResponseEntity.ok(Collections.emptyList());
+            return Collections.emptyList();
         }
 
+        List<PreCheckResponse> preCheckResponses;
         try {
-            List<PreCheckResponse> preCheckResponses = partyBody.stream()
+            preCheckResponses = partyBody.stream()
                     .map(asset -> createPrecheckResponse(asset.getType(), false, ""))
-                    .collect(Collectors.toList());
+                    .toList();
 
-            return ResponseEntity.ok(preCheckResponses);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            // Handle the specific exception or error here, and throw an appropriate exception
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error creating precheck responses", e);
         }
+        return preCheckResponses;
     }
+
 
     public static PreCheckResponse createPrecheckResponse(String assetType, @NotNull boolean eligible, String message) {
         return PreCheckResponse.builder()

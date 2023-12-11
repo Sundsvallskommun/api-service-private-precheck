@@ -1,5 +1,8 @@
 package se.sundsvall.precheck.api.model;
 
+import lombok.Getter;
+
+@Getter
 public enum Status {
 
     ACTIVE("ACTIVE"),
@@ -13,5 +16,8 @@ public enum Status {
     Status(String value) {
         this.value = value;
     }
+
 }
+
+
 
