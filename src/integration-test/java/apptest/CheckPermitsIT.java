@@ -70,7 +70,5 @@ class CheckPermitsIT extends AbstractAppTest {
                 .withExpectedResponseStatus(HttpStatus.BAD_REQUEST)
                 .withExpectedResponse("response.json")
                 .sendRequestAndVerifyResponse();
-
     }
-
 }

@@ -15,14 +15,6 @@ public abstract class AbstractIntegrationProperties {
 
     @Getter
     @Setter
-    public static final class BasicAuth {
-
-        private String username;
-        private String password;
-    }
-
-    @Getter
-    @Setter
     public static final class OAuth2 {
 
         private String tokenUri;

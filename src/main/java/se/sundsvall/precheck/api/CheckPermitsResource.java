@@ -78,6 +78,6 @@ public class CheckPermitsResource {
                     allowEmptyValue = true
             ) final String assetType) {
 
-        return preCheckService.checkPermit(partyId, municipalityId, assetType);
+        return ResponseEntity.ok(preCheckService.checkPermit(partyId, municipalityId, assetType));
     }
 }

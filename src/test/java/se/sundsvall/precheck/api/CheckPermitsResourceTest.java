@@ -42,13 +42,13 @@ class CheckPermitsResourceTest {
     void getCitizenWithAssetType_ReturnOneAssetType() throws Exception {
 
         when(preCheckService.checkPermit(anyString(), anyString(), anyString()))
-                .thenReturn(ResponseEntity.ok(Collections.singletonList(
+                .thenReturn(List.of(
                         PreCheckResponse.builder()
                                 .withAssetType(ASSET_TYPE)
                                 .withEligible(false)
                                 .withMessage("")
                                 .build()
-                )));
+                ));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/PreCheck/{partyId}", PARTY_ID)
                         .param("municipalityId", MUNICIPALITY_ID)
@@ -68,7 +68,7 @@ class CheckPermitsResourceTest {
     void getCitizenWithAssetType_ReturnMultipleAssetTypes() throws Exception {
 
         when(preCheckService.checkPermit(anyString(), anyString(), anyString()))
-                .thenReturn(ResponseEntity.ok(List.of(
+                .thenReturn(List.of(
                         PreCheckResponse.builder()
                                 .withAssetType("PARKING_PERMIT")
                                 .withEligible(false)
@@ -79,7 +79,7 @@ class CheckPermitsResourceTest {
                                 .withEligible(false)
                                 .withMessage("")
                                 .build()
-                )));
+                ));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/PreCheck/{partyId}", PARTY_ID)
                         .param("municipalityId", MUNICIPALITY_ID)

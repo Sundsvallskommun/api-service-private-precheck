@@ -94,6 +94,7 @@ class PreCheckServiceTest {
 
         VALID_ASSET.setType(TEST_ASSET_TYPE);
     }
+
     @Test
     void IntegrationResponsesTest_AllValidValues() {
         when(citizenIntegration.getCitizen(TEST_PARTY_ID))
@@ -102,12 +103,12 @@ class PreCheckServiceTest {
         when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
                 .thenReturn(ResponseEntity.ok(List.of(VALID_ASSET)));
 
-        ResponseEntity<List<PreCheckResponse>> result = preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE);
+        List<PreCheckResponse> result = preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE);
 
-        assertNotNull(result.getBody());
-        assertEquals(1, result.getBody().size());
+        assertNotNull(result);
+        assertEquals(1, result.size());
 
-        PreCheckResponse responseBody = result.getBody().get(0);
+        PreCheckResponse responseBody = result.get(0);
 
         assertEquals(TEST_ASSET_TYPE, responseBody.getAssetType());
         assertFalse(responseBody.isEligible());
@@ -126,15 +127,15 @@ class PreCheckServiceTest {
                         new Asset().type(OTHER_ASSET_TYPE)
                 )));
 
-        ResponseEntity<List<PreCheckResponse>> result = preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, "");
+        List<PreCheckResponse> result = preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, "");
 
-        assertNotNull(result.getBody());
-        assertEquals(2, result.getBody().size());
+        assertNotNull(result);
+        assertEquals(2, result.size());
 
-        assertEquals(TEST_ASSET_TYPE, result.getBody().get(0).getAssetType());
-        assertEquals(OTHER_ASSET_TYPE, result.getBody().get(1).getAssetType());
+        assertEquals(TEST_ASSET_TYPE, result.get(0).getAssetType());
+        assertEquals(OTHER_ASSET_TYPE, result.get(1).getAssetType());
 
-        for (PreCheckResponse responseBody : result.getBody()) {
+        for (var responseBody : result) {
             assertFalse(responseBody.isEligible());
             assertEquals("", responseBody.getMessage());
         }

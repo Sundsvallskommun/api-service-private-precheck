@@ -15,13 +15,12 @@ import java.util.List;
 
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.precheck.constant.Constants.INVALID_MUNICIPALITY_ID;
 import static se.sundsvall.precheck.constant.Constants.NOT_FOUND_ERROR_MESSAGE;
+import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.checkResourceAvailability;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.containsValidMunicipalityId;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateAssetTypeResponses;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateNoAssetTypeResponses;
-
 @Service
 public final class PreCheckService {
 
@@ -29,13 +28,12 @@ public final class PreCheckService {
     private final CitizenIntegration citizenIntegration;
     private final PartyAssetsIntegration partyAssetsIntegration;
 
-
     public PreCheckService(CitizenIntegration citizenIntegration, PartyAssetsIntegration partyAssetsIntegration) {
         this.citizenIntegration = citizenIntegration;
         this.partyAssetsIntegration = partyAssetsIntegration;
     }
 
-    public ResponseEntity<List<PreCheckResponse>> checkPermit(String partyId, String municipalityId, final String assetType) {
+    public List<PreCheckResponse> checkPermit(String partyId, String municipalityId, final String assetType) {
         final var citizen = citizenIntegration.getCitizen(partyId);
         final var partyAssets = partyAssetsIntegration.getPartyAssets(partyId, Status.ACTIVE);
 
@@ -46,14 +44,17 @@ public final class PreCheckService {
 
         if (!containsValidMunicipalityId(citizen, municipalityId)) {
             LOGGER.info("No valid Municipality ID found during the check for partyId: {}", partyId);
-            throw Problem.valueOf(BAD_REQUEST, String.format(INVALID_MUNICIPALITY_ID, partyId));
+            throw Problem.valueOf(BAD_REQUEST, NO_VALID_MUNICIPALITY_ID_FOUND);
         }
+
+        List<PreCheckResponse> responses;
 
         if (!StringUtils.isEmpty(assetType)) {
-            LOGGER.info("Didn't have any assetType");
-            return generateAssetTypeResponses(assetType, partyAssets);
+            responses = generateAssetTypeResponses(assetType, partyAssets);
+        } else {
+            responses = generateNoAssetTypeResponses(partyAssets);
         }
 
-        return generateNoAssetTypeResponses(partyAssets);
+        return responses;
     }
 }
