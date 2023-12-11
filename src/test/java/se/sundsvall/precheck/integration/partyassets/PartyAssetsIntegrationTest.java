@@ -85,7 +85,7 @@ public class PartyAssetsIntegrationTest {
     void getPartyAssets_shouldReturnUnauthorizedResponse_whenClientThrowsClientAuthorizationException() {
         final OAuth2Error error = new OAuth2Error("unauthorized", "Unauthorized access to the resource", null);
 
-        when(client.getPartyAssets(PARTY_ID, STATUS.toString())).thenThrow(new ClientAuthorizationException(error, PartyAssetsIntegration.INTEGRATION_NAME , "Unauthorized"));
+        when(client.getPartyAssets(PARTY_ID, STATUS.toString())).thenThrow(new ClientAuthorizationException(error, PartyAssetsIntegration.INTEGRATION_NAME, "Unauthorized"));
 
         final ResponseEntity<List<Asset>> actualResponse = integration.getPartyAssets(PARTY_ID, STATUS);
 

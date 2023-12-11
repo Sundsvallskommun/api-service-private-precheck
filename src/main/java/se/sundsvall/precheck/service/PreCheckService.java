@@ -3,7 +3,6 @@ package se.sundsvall.precheck.service;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import se.sundsvall.precheck.api.model.PreCheckResponse;
@@ -21,6 +20,7 @@ import static se.sundsvall.precheck.service.utils.PreCheckUtil.checkResourceAvai
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.containsValidMunicipalityId;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateAssetTypeResponses;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateNoAssetTypeResponses;
+
 @Service
 public final class PreCheckService {
 
