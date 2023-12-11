@@ -116,7 +116,7 @@ public final class PreCheckUtil {
                         return (List.of(createPrecheckResponse(assetType, false, errorMessage)));
                     }
 
-                    return  List.of(createPrecheckResponse(assetType, true, ""));
+                    return List.of(createPrecheckResponse(assetType, true, ""));
                 })
                 .orElse(List.of(createPrecheckResponse(assetType, true, "")));
     }
