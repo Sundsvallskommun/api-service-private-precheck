@@ -30,14 +30,18 @@ public class PartyAssetsIntegration {
             LOGGER.info("Calling PartyAssets service");
             return client.getPartyAssets(a, status.toString());
         } catch (FeignException e) {
-            LOGGER.error("Error when calling PartyAssets service1: ", e);
+            logError(e);
             return ResponseEntity.status(e.status()).build();
         } catch (ClientAuthorizationException e) {
-            LOGGER.error("Error when calling PartyAssets service2: ", e);
+            logError(e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
-            LOGGER.error("Error when calling PartyAssets service3: ", e);
+            logError(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    private void logError(Exception exception) {
+        LOGGER.error("Error when calling getPartyAssets service", exception);
     }
 }

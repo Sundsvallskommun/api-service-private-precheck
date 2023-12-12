@@ -15,6 +15,7 @@ import se.sundsvall.precheck.api.model.PreCheckResponse;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.zalando.problem.Status.BAD_REQUEST;
@@ -122,21 +123,25 @@ public final class PreCheckUtil {
     }
 
     public static List<PreCheckResponse> generateNoAssetTypeResponses(ResponseEntity<List<Asset>> party) {
-        List<Asset> partyBody = party.getBody();
 
-        if (partyBody == null || partyBody.isEmpty()) {
+        List<Asset> partyBody;
+        try {
+            LOGGER.info("Input data generateNoAssetTypeResponses: Party: {}", party.getStatusCode());
+            partyBody = Optional.ofNullable(party.getBody()).orElse(Collections.emptyList());
+        } catch (Exception e) {
+            LOGGER.error("Error occurred while validating in generateNoAssetTypeResponses: {}", e.getMessage());
             return Collections.emptyList();
         }
 
         List<PreCheckResponse> preCheckResponses;
         try {
             preCheckResponses = partyBody.stream()
+                    .filter(Objects::nonNull)
                     .map(asset -> createPrecheckResponse(asset.getType(), false, ""))
                     .toList();
 
         } catch (Exception e) {
-            // Handle the specific exception or error here, and throw an appropriate exception
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error creating precheck responses", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error creating responses", e);
         }
         return preCheckResponses;
     }
