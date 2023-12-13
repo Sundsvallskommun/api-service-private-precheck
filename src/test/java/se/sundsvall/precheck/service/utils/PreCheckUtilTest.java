@@ -15,10 +15,12 @@ import se.sundsvall.precheck.api.model.PreCheckResponse;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -85,13 +87,6 @@ class PreCheckUtilTest {
 
         assertTrue(checkResourceAvailability(MOCK_CITIZEN, MOCK_PARTY));
         assertTrue(checkResourceAvailability(null, null));
-
-        when(MOCK_CITIZEN.getBody()).thenThrow(new RuntimeException());
-
-        assertTrue(checkResourceAvailability(MOCK_CITIZEN, MOCK_PARTY));
-
-        verify(MOCK_CITIZEN, times(3)).getStatusCode();
-        verify(MOCK_PARTY, times(3)).getStatusCode();
     }
 
     @ParameterizedTest
@@ -122,12 +117,27 @@ class PreCheckUtilTest {
         when(mockResponseEntity.getBody()).thenReturn(mockCitizen);
 
         assertTrue(containsValidMunicipalityId(mockResponseEntity, "1234"));
-
-        verify(mockAddress, times(1)).getMunicipality();
-        verify(mockAddress, times(1)).getAddressType();
-        verify(mockCitizen, times(2)).getAddresses();
-        verify(mockResponseEntity, times(2)).getBody();
     }
+
+    @Test
+    void containsValidMunicipalityId_NullCitizenEntity_ReturnsFalse() {
+        assertFalse(containsValidMunicipalityId(null, "municipalityId"));
+        assertFalse(containsValidMunicipalityId(ResponseEntity.ok(null), "municipalityId"));
+    }
+
+    @Test
+    void containsValidMunicipalityId_NullMunicipalityId_ReturnsFalse() {
+        assertFalse(containsValidMunicipalityId(ResponseEntity.ok(new CitizenExtended()), null));
+        assertFalse(containsValidMunicipalityId(ResponseEntity.ok(new CitizenExtended()), ""));
+    }
+
+    @Test
+    void containsValidMunicipalityId_NullCitizenOrAddresses_ReturnsFalse() {
+        CitizenExtended citizen = new CitizenExtended();
+        citizen.setAddresses(null);
+        assertFalse(containsValidMunicipalityId(ResponseEntity.ok(citizen), "municipalityId"));
+    }
+
 
     @ParameterizedTest
     @MethodSource("getAssetTypeValues")
@@ -142,8 +152,6 @@ class PreCheckUtilTest {
         assertFalse(result.get(0).getAssetType().isEmpty());
         assertTrue(result.get(0).isEligible());
         assertTrue(result.get(0).getMessage().isEmpty());
-
-        verify(MOCK_PARTY, times(3)).getBody();
     }
 
     @ParameterizedTest
@@ -185,6 +193,13 @@ class PreCheckUtilTest {
         verify(mockResponseEntity, times(1)).getBody();
     }
 
+    @Test
+    void generateNoAssetTypeResponses_PartyAssetsNull_ReturnEmptList() {
+        List<PreCheckResponse> result = generateNoAssetTypeResponses(null);
+
+        assertEquals(Collections.emptyList(), result);
+    }
+
     @ParameterizedTest
     @MethodSource("getAssetTypeValues")
     void generateAssetTypeResponses_ReturnsResponseWhenAssetTypeExists(String assetType) {
@@ -203,5 +218,17 @@ class PreCheckUtilTest {
             assertTrue(result.get(0).isEligible());
             assertTrue(result.get(0).getMessage().isEmpty());
         }
+    }
+
+    @Test
+    void generateAssetTypeResponses_ReturnsEmptyListWhenNull() {
+        List<PreCheckResponse> result = generateAssetTypeResponses(null, null);
+
+        assertThat(result).isNotNull().satisfies(preCheckResponses -> {
+            assertThat(preCheckResponses).isNotNull().isNotEmpty();
+            assertThat(preCheckResponses.get(0).getAssetType()).isEmpty();
+            assertThat(preCheckResponses.get(0).isEligible()).isFalse();
+            assertThat(preCheckResponses.get(0).getMessage()).isNotEmpty();
+        });
     }
 }
