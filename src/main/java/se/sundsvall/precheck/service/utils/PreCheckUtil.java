@@ -36,43 +36,27 @@ public final class PreCheckUtil {
             return true;
         }
 
-        try {
-            LOGGER.info("Input data checkResourceAvailability: Citizen: {}    Party: {}", citizen.getStatusCode(), party.getStatusCode());
+        boolean isCitizenBodyPresent = citizen.getBody() != null;
+        boolean areStatusCodesAcceptable = citizen.getStatusCode() == HttpStatus.OK && party.getStatusCode() == HttpStatus.OK;
 
-            boolean isCitizenBodyPresent = citizen.getBody() != null && !citizen.getBody().equals(new CitizenExtended());
-            boolean areStatusCodesAcceptable = citizen.getStatusCode() == HttpStatus.OK && party.getStatusCode() == HttpStatus.OK;
-
-            if (isCitizenBodyPresent && areStatusCodesAcceptable) {
-                LOGGER.info("Both Citizen and PartyAssets are valid.");
-                return false;
-            }
+        if (isCitizenBodyPresent && areStatusCodesAcceptable) {
+            LOGGER.info("Both Citizen and PartyAssets are valid.");
+            return false;
+        } else {
             LOGGER.info("Either Citizen or PartyAssets is invalid.");
-        } catch (Exception e) {
-            LOGGER.error("Error occurred while validating in checkResourceAvailability: {}", e.getMessage());
+            return true;
         }
-        return true;
     }
 
     public static boolean containsValidMunicipalityId(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
-        if (citizenEntity == null || citizenEntity.getBody() == null) {
-            LOGGER.error("Citizen is null during municipality ID check");
-            return false;
-        }
-
-        if (municipalityId == null || municipalityId.isEmpty()) {
-            LOGGER.error("MunicipalityId is null or empty during municipality ID check");
+        if (invalidInput(citizenEntity, municipalityId)) {
             return false;
         }
 
         CitizenExtended citizen = citizenEntity.getBody();
-        if (citizen == null || citizen.getAddresses() == null) {
-            LOGGER.error("Citizen or addresses is null during municipality ID check");
-            return false;
-        }
 
         for (CitizenAddress citizenAddress : citizen.getAddresses()) {
-            if (isCorrectCitizenAddress(citizenAddress, municipalityId)) {
-                LOGGER.info("Municipality ID found during check");
+            if (isCorrectAddressTypeAndMunicipality(citizenAddress, municipalityId)) {
                 return true;
             }
         }
@@ -80,12 +64,23 @@ public final class PreCheckUtil {
         throw Problem.valueOf(BAD_REQUEST, NO_VALID_MUNICIPALITY_ID_FOUND);
     }
 
-    private static boolean isCorrectCitizenAddress(CitizenAddress citizenAddress, String municipalityId) {
+    private static boolean invalidInput(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
+        if (citizenEntity == null || citizenEntity.getBody() == null ||
+                municipalityId == null || municipalityId.isEmpty()) {
+            LOGGER.error("Invalid input for municipality ID check");
+            return true;
+        }
+
+        CitizenExtended citizen = citizenEntity.getBody();
+        return citizen == null || citizen.getAddresses() == null;
+    }
+
+    private static boolean isCorrectAddressTypeAndMunicipality(CitizenAddress citizenAddress, String municipalityId) {
         var citizenAddressType = citizenAddress.getAddressType();
         var citizenMunicipality = citizenAddress.getMunicipality();
 
         if (citizenAddressType == null || citizenMunicipality == null) {
-            LOGGER.error("CitizenAddress is null during municipality ID check");
+            LOGGER.error("Incomplete citizen address details during municipality ID check");
             return false;
         }
 
@@ -93,33 +88,27 @@ public final class PreCheckUtil {
             return false;
         }
 
-        LOGGER.info("Looped the citizenAddressType: {} , and the CORRECT_ADDRESS_TYPE: {}", citizenAddressType, CORRECT_ADDRESS_TYPE);
-        LOGGER.info("Looped the citizenMunicipality: {} , and the municipalityId: {}", citizenMunicipality, municipalityId);
+        LOGGER.info("Checked citizen address type: {} against the correct type: {}", citizenAddressType, CORRECT_ADDRESS_TYPE);
+        LOGGER.info("Checked citizen municipality: {} against the provided ID: {}", citizenMunicipality, municipalityId);
 
         return citizenMunicipality.equals(municipalityId);
     }
 
-    public static List<PreCheckResponse> generateAssetTypeResponses(final String assetType, final ResponseEntity<List<Asset>> party) {
 
+    public static List<PreCheckResponse> generateAssetTypeResponses(final String assetType, final ResponseEntity<List<Asset>> party) {
         if (StringUtils.isEmpty(assetType)) {
             return List.of(createPrecheckResponse("", false, "When searching for assetType, assetType must be provided"));
         }
-        if (party.getBody() == null || party.getBody().isEmpty()) {
+
+        List<Asset> body = party.getBody();
+        if (body == null || body.isEmpty()) {
             return List.of(createPrecheckResponse(assetType, true, ""));
         }
 
-        return Optional.ofNullable(party.getBody())
-                .map(assets -> {
-                    boolean assetTypeExists = assets.stream().anyMatch(asset -> asset.getType().equals(assetType));
-
-                    if (assetTypeExists) {
-                        String errorMessage = String.format(ASSET_TYPE_EXISTS_ERROR_MESSAGE, assetType);
-                        return (List.of(createPrecheckResponse(assetType, false, errorMessage)));
-                    }
-
-                    return List.of(createPrecheckResponse(assetType, true, ""));
-                })
-                .orElse(List.of(createPrecheckResponse(assetType, true, "")));
+        return body.stream()
+                .anyMatch(asset -> asset.getType().equals(assetType))
+                ? List.of(createPrecheckResponse(assetType, false, String.format(ASSET_TYPE_EXISTS_ERROR_MESSAGE, assetType)))
+                : List.of(createPrecheckResponse(assetType, true, ""));
     }
 
     public static List<PreCheckResponse> generateNoAssetTypeResponses(ResponseEntity<List<Asset>> party) {
