@@ -34,7 +34,6 @@ import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateAssetType
 
 class PreCheckUtilTest {
     private static final String WANTED_ASSET_TYPE_NAME = "WantedAssetTypeName";
-    private final ResponseEntity<Object> REQUEST_OK = ResponseEntity.ok().build();
     private  ResponseEntity<CitizenExtended> MOCK_CITIZEN_RESPONSE_ENTITY;
     private  ResponseEntity<List<Asset>> MOCK_PARTY_RESPONSE_ENTITY;
     private  Asset MOCK_ASSET = mock(Asset.class);
@@ -268,7 +267,4 @@ class PreCheckUtilTest {
             assertTrue(result.get(0).getMessage().isEmpty());
         }
     }
-
-
-
 }
