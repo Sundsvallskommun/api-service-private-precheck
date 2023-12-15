@@ -37,14 +37,6 @@ import static se.sundsvall.precheck.constant.Constants.CORRECT_ADDRESS_TYPE;
 import static se.sundsvall.precheck.constant.Constants.NOT_FOUND_ERROR_MESSAGE;
 import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
 
-/**
- * Test methods:
- * - IntegrationResponsesTest_AllValidValues(): Tests scenarios with all valid values.
- * - ResponseTest_WithoutGivenAssetType(): Tests response scenarios without a given asset type.
- * - IntegrationResponses_TestEmpty200IntegrationResponses(): Tests behavior with empty 200 integration responses.
- * - IntegrationResponsesTest_OneIntegrationErrorCases(): Parameterized test for one integration error cases.
- * - ResponseTest_InvalidMunicipalityId(): Tests scenarios with an invalid municipality ID.
- */
 @ExtendWith(MockitoExtension.class)
 class PreCheckServiceTest {
     private static final String TEST_PARTY_ID = "testPartyId";
@@ -53,10 +45,13 @@ class PreCheckServiceTest {
     private static final String OTHER_ASSET_TYPE = "otherAssetType";
     private static final CitizenExtended VALID_CITIZEN_RESPONSE = new CitizenExtended();
     private static final Asset VALID_ASSET = new Asset();
+
     @Mock
     private CitizenIntegration citizenIntegration;
+
     @Mock
     private PartyAssetsIntegration partyAssetIntegration;
+
     @InjectMocks
     private PreCheckService preCheckService;
 
@@ -97,11 +92,8 @@ class PreCheckServiceTest {
 
     @Test
     void IntegrationResponsesTest_AllValidValues() {
-        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
-                .thenReturn(ResponseEntity.ok(VALID_CITIZEN_RESPONSE));
-
-        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
-                .thenReturn(ResponseEntity.ok(List.of(VALID_ASSET)));
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID)).thenReturn(ResponseEntity.ok(VALID_CITIZEN_RESPONSE));
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE)).thenReturn(ResponseEntity.ok(List.of(VALID_ASSET)));
 
         List<PreCheckResponse> result = preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE);
 
@@ -113,19 +105,12 @@ class PreCheckServiceTest {
         assertEquals(TEST_ASSET_TYPE, responseBody.getAssetType());
         assertFalse(responseBody.isEligible());
         assertFalse(responseBody.getMessage().isEmpty());
-
     }
 
     @Test
     void ResponseTest_WithoutGivenAssetType() {
-
-        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
-                .thenReturn(ResponseEntity.ok(VALID_CITIZEN_RESPONSE));
-        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
-                .thenReturn(ResponseEntity.ok(List.of(
-                        VALID_ASSET,
-                        new Asset().type(OTHER_ASSET_TYPE)
-                )));
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID)).thenReturn(ResponseEntity.ok(VALID_CITIZEN_RESPONSE));
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE)).thenReturn(ResponseEntity.ok(List.of(VALID_ASSET, new Asset().type(OTHER_ASSET_TYPE))));
 
         List<PreCheckResponse> result = preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, "");
 
@@ -170,10 +155,7 @@ class PreCheckServiceTest {
         when(citizenIntegration.getCitizen(TEST_PARTY_ID)).thenReturn(citizenResponse);
         when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE)).thenReturn(assetsResponse);
 
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE)
-        );
+        Exception exception = assertThrows(Exception.class, () -> preCheckService.checkPermit(TEST_PARTY_ID, TEST_MUNICIPALITY_ID, TEST_ASSET_TYPE));
 
         assertProblemWithNoContent(exception);
     }
@@ -185,31 +167,22 @@ class PreCheckServiceTest {
 
     @Test
     void ResponseTest_InvalidMunicipalityId() {
+        // Set up test data and mocks here
         CitizenExtended badMunicipalityIdCitizen = new CitizenExtended();
         CitizenAddress badMunicipalityIdAddress = new CitizenAddress();
         badMunicipalityIdAddress.setAddressType(CORRECT_ADDRESS_TYPE);
         badMunicipalityIdAddress.setMunicipality("invalidMunicipalityId");
         badMunicipalityIdCitizen.setAddresses(List.of(badMunicipalityIdAddress));
 
-        when(citizenIntegration.getCitizen(TEST_PARTY_ID))
-                .thenReturn(ResponseEntity.ok(badMunicipalityIdCitizen));
-        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE))
-                .thenReturn(ResponseEntity.ok(List.of(VALID_ASSET)));
+        when(citizenIntegration.getCitizen(TEST_PARTY_ID)).thenReturn(ResponseEntity.ok(badMunicipalityIdCitizen));
+        when(partyAssetIntegration.getPartyAssets(TEST_PARTY_ID, Status.ACTIVE)).thenReturn(ResponseEntity.ok(List.of(VALID_ASSET)));
 
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> preCheckService.checkPermit(TEST_PARTY_ID, "127", TEST_ASSET_TYPE)
-        );
+        Exception exception = assertThrows(Exception.class, () -> preCheckService.checkPermit(TEST_PARTY_ID, "127", TEST_ASSET_TYPE));
 
         ThrowableProblem problem = Problem.valueOf(BAD_REQUEST, NO_VALID_MUNICIPALITY_ID_FOUND);
 
-        assertEquals(
-                problem.getStatus(),
-                ((Problem) exception).getStatus()
-        );
-        assertEquals(
-                problem.getMessage(),
-                exception.getMessage()
-        );
+        assertEquals(problem.getStatus(), ((Problem) exception).getStatus());
+        assertEquals(problem.getMessage(), exception.getMessage());
     }
+
 }

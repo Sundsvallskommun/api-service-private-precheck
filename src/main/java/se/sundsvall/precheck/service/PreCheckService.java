@@ -9,6 +9,7 @@ import se.sundsvall.precheck.api.model.PreCheckResponse;
 import se.sundsvall.precheck.api.model.Status;
 import se.sundsvall.precheck.integration.citizen.CitizenIntegration;
 import se.sundsvall.precheck.integration.partyassets.PartyAssetsIntegration;
+import se.sundsvall.precheck.service.utils.PreCheckUtil;
 
 import java.util.List;
 
@@ -16,15 +17,12 @@ import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.precheck.constant.Constants.NOT_FOUND_ERROR_MESSAGE;
 import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
-import static se.sundsvall.precheck.service.utils.PreCheckUtil.checkResourceAvailability;
-import static se.sundsvall.precheck.service.utils.PreCheckUtil.containsValidMunicipalityId;
-import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateAssetTypeResponses;
-import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateNoAssetTypeResponses;
 
 @Service
 public final class PreCheckService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PreCheckService.class);
+
     private final CitizenIntegration citizenIntegration;
     private final PartyAssetsIntegration partyAssetsIntegration;
 
@@ -37,12 +35,12 @@ public final class PreCheckService {
         final var citizen = citizenIntegration.getCitizen(partyId);
         final var partyAssets = partyAssetsIntegration.getPartyAssets(partyId, Status.ACTIVE);
 
-        if (checkResourceAvailability(citizen, partyAssets)) {
+        if (PreCheckUtil.checkResourceAvailability(citizen, partyAssets)) {
             LOGGER.error("Citizen or Party is null or had no content during resource availability check");
             throw Problem.valueOf(NOT_FOUND, String.format(NOT_FOUND_ERROR_MESSAGE, partyId));
         }
 
-        if (!containsValidMunicipalityId(citizen, municipalityId)) {
+        if (!PreCheckUtil.containsValidMunicipalityId(citizen, municipalityId)) {
             LOGGER.info("No valid Municipality ID found during the check for partyId: {}", partyId);
             throw Problem.valueOf(BAD_REQUEST, NO_VALID_MUNICIPALITY_ID_FOUND);
         }
@@ -50,9 +48,9 @@ public final class PreCheckService {
         List<PreCheckResponse> responses;
 
         if (!StringUtils.isEmpty(assetType)) {
-            responses = generateAssetTypeResponses(assetType, partyAssets);
+            responses = PreCheckUtil.generateAssetTypeResponses(assetType, partyAssets);
         } else {
-            responses = generateNoAssetTypeResponses(partyAssets);
+            responses = PreCheckUtil.generateNoAssetTypeResponses(partyAssets);
         }
 
         return responses;
