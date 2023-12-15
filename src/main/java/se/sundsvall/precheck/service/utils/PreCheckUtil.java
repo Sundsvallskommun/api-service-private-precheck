@@ -55,14 +55,18 @@ public final class PreCheckUtil {
 
         CitizenExtended citizen = citizenEntity.getBody();
 
-        for (CitizenAddress citizenAddress : citizen.getAddresses()) {
-            if (isCorrectAddressTypeAndMunicipality(citizenAddress, municipalityId)) {
-                return true;
+        if (citizen != null && citizen.getAddresses() != null) {
+            for (CitizenAddress citizenAddress : citizen.getAddresses()) {
+                if (isCorrectAddressTypeAndMunicipality(citizenAddress, municipalityId)) {
+                    return true;
+                }
             }
         }
 
         throw Problem.valueOf(BAD_REQUEST, NO_VALID_MUNICIPALITY_ID_FOUND);
     }
+
+
 
     private static boolean invalidInput(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
         if (citizenEntity == null || citizenEntity.getBody() == null ||
