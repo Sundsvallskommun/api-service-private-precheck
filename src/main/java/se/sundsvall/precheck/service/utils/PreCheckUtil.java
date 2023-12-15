@@ -88,15 +88,12 @@ public final class PreCheckUtil {
             return false;
         }
 
-        LOGGER.info("Checked citizen address type: {} against the correct type: {}", citizenAddressType, CORRECT_ADDRESS_TYPE);
-        LOGGER.info("Checked citizen municipality: {} against the provided ID: {}", citizenMunicipality, municipalityId);
-
         return citizenMunicipality.equals(municipalityId);
     }
 
 
     public static List<PreCheckResponse> generateAssetTypeResponses(final String assetType, final ResponseEntity<List<Asset>> party) {
-        if (StringUtils.isEmpty(assetType)) {
+        if (StringUtils.isEmpty(assetType) || party == null) {
             return List.of(createPrecheckResponse("", false, "When searching for assetType, assetType must be provided"));
         }
 
@@ -106,9 +103,10 @@ public final class PreCheckUtil {
         }
 
         return body.stream()
-                .anyMatch(asset -> asset.getType().equals(assetType))
+                .anyMatch(asset -> asset.getType() != null && asset.getType().equals(assetType))
                 ? List.of(createPrecheckResponse(assetType, false, String.format(ASSET_TYPE_EXISTS_ERROR_MESSAGE, assetType)))
                 : List.of(createPrecheckResponse(assetType, true, ""));
+
     }
 
     public static List<PreCheckResponse> generateNoAssetTypeResponses(ResponseEntity<List<Asset>> party) {
