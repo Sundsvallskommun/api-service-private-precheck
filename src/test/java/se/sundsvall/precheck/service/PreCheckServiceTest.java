@@ -37,6 +37,7 @@ import static se.sundsvall.precheck.constant.Constants.CORRECT_ADDRESS_TYPE;
 import static se.sundsvall.precheck.constant.Constants.NOT_FOUND_ERROR_MESSAGE;
 import static se.sundsvall.precheck.constant.Constants.NO_VALID_MUNICIPALITY_ID_FOUND;
 
+
 @ExtendWith(MockitoExtension.class)
 class PreCheckServiceTest {
     private static final String TEST_PARTY_ID = "testPartyId";
@@ -184,5 +185,4 @@ class PreCheckServiceTest {
         assertEquals(problem.getStatus(), ((Problem) exception).getStatus());
         assertEquals(problem.getMessage(), exception.getMessage());
     }
-
 }

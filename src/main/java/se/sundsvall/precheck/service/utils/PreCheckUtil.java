@@ -67,7 +67,6 @@ public final class PreCheckUtil {
     }
 
 
-
     private static boolean invalidInput(ResponseEntity<CitizenExtended> citizenEntity, String municipalityId) {
         if (citizenEntity == null || citizenEntity.getBody() == null ||
                 municipalityId == null || municipalityId.isEmpty()) {

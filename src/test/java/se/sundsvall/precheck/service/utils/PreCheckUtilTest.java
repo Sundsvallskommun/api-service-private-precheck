@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import se.sundsvall.precheck.api.model.PreCheckResponse;
 
 import java.lang.reflect.Constructor;
@@ -31,12 +33,18 @@ import static org.mockito.Mockito.when;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.containsValidMunicipalityId;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.generateAssetTypeResponses;
 
-
 class PreCheckUtilTest {
     private static final String WANTED_ASSET_TYPE_NAME = "WantedAssetTypeName";
-    private  ResponseEntity<CitizenExtended> MOCK_CITIZEN_RESPONSE_ENTITY;
-    private  ResponseEntity<List<Asset>> MOCK_PARTY_RESPONSE_ENTITY;
-    private  Asset MOCK_ASSET = mock(Asset.class);
+    private ResponseEntity<CitizenExtended> MOCK_CITIZEN_RESPONSE_ENTITY;
+
+    @Mock
+    private ResponseEntity<List<Asset>> mockPartyResponseEntity;
+
+    @Mock
+    private List<Asset> mock_party_response_entity_body = mock(List.class);
+    @Mock
+    private Asset MOCK_ASSET = mock(Asset.class);
+
 
     private static Stream<Arguments> getAssetTypeValues() {
         return Stream.of(
@@ -44,13 +52,6 @@ class PreCheckUtilTest {
                 Arguments.of("SecondRandomAssetType"),
                 Arguments.of(WANTED_ASSET_TYPE_NAME)
         );
-    }
-
-    @BeforeEach
-    void setUp() {
-        MOCK_CITIZEN_RESPONSE_ENTITY = mock(ResponseEntity.class);
-        MOCK_PARTY_RESPONSE_ENTITY = mock(ResponseEntity.class);
-        MOCK_ASSET = mock(Asset.class);
     }
 
     private static Stream<Arguments> getCitizenErrorValues() {
@@ -61,6 +62,16 @@ class PreCheckUtilTest {
                 Arguments.of(ResponseEntity.status(HttpStatus.FORBIDDEN).build())
         );
     }
+
+    @BeforeEach
+    void setUp() {
+        MOCK_CITIZEN_RESPONSE_ENTITY = mock(ResponseEntity.class);
+        mockPartyResponseEntity = mock(ResponseEntity.class);
+        MOCK_ASSET = mock(Asset.class);
+
+
+    }
+
     @Test
     void tryInstantiatePreCheckUtil_ThrowsIllegalAccessException() {
         assertThrows(InvocationTargetException.class, () -> {
@@ -74,10 +85,10 @@ class PreCheckUtilTest {
     @Test
     void checkResourceAvailability_WhenCitizenAndPartyAreValid_ReturnsFalse() {
         when(MOCK_CITIZEN_RESPONSE_ENTITY.getStatusCode()).thenReturn(HttpStatus.OK);
-        when(MOCK_PARTY_RESPONSE_ENTITY.getStatusCode()).thenReturn(HttpStatus.OK);
+        when(mockPartyResponseEntity.getStatusCode()).thenReturn(HttpStatus.OK);
         when(MOCK_CITIZEN_RESPONSE_ENTITY.getBody()).thenReturn(new CitizenExtended());
 
-        boolean result = PreCheckUtil.checkResourceAvailability(MOCK_CITIZEN_RESPONSE_ENTITY, MOCK_PARTY_RESPONSE_ENTITY);
+        boolean result = PreCheckUtil.checkResourceAvailability(MOCK_CITIZEN_RESPONSE_ENTITY, mockPartyResponseEntity);
 
         assertFalse(result);
     }
@@ -90,24 +101,32 @@ class PreCheckUtilTest {
     }
 
     @Test
-    void checkResourceAvailability_WhenNullCitizenBodyIsNull_ReturnsTrue(){
+    void checkResourceAvailability_WhenNullCitizenBodyIsNull_ReturnsTrue() {
         when(MOCK_CITIZEN_RESPONSE_ENTITY.getStatusCode()).thenReturn(HttpStatus.OK);
-        when(MOCK_PARTY_RESPONSE_ENTITY.getStatusCode()).thenReturn(HttpStatus.OK);
+        when(mockPartyResponseEntity.getStatusCode()).thenReturn(HttpStatus.OK);
 
-        boolean result = PreCheckUtil.checkResourceAvailability(MOCK_CITIZEN_RESPONSE_ENTITY, MOCK_PARTY_RESPONSE_ENTITY);
+        boolean result = PreCheckUtil.checkResourceAvailability(MOCK_CITIZEN_RESPONSE_ENTITY, mockPartyResponseEntity);
 
         assertTrue(result);
     }
 
     @ParameterizedTest
     @MethodSource("getCitizenErrorValues")
-    void resourceNotFound_CitizenErrors_ReturnsTrue(ResponseEntity<Object> citizenStatus) {
+    void checkResourceAvailability_resourceNotFound_CitizenErrors_ReturnsTrue(ResponseEntity<Object> citizenStatus) {
         when(MOCK_CITIZEN_RESPONSE_ENTITY.getStatusCode()).thenReturn(citizenStatus.getStatusCode());
-        when(MOCK_PARTY_RESPONSE_ENTITY.getStatusCode()).thenReturn(HttpStatus.OK);
+        when(mockPartyResponseEntity.getStatusCode()).thenReturn(HttpStatus.OK);
 
-        boolean result = PreCheckUtil.checkResourceAvailability(MOCK_CITIZEN_RESPONSE_ENTITY, MOCK_PARTY_RESPONSE_ENTITY);
+        boolean result = PreCheckUtil.checkResourceAvailability(MOCK_CITIZEN_RESPONSE_ENTITY, mockPartyResponseEntity);
 
         assertTrue(result);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getCitizenErrorValues")
+    void checkResourceAvailability_resourceNotFound_CitizenError_ReturnsTrue(ResponseEntity<Object> citizenStatus) {
+        when(MOCK_CITIZEN_RESPONSE_ENTITY.getStatusCode()).thenReturn(citizenStatus.getStatusCode());
+
+        assertTrue(PreCheckUtil.checkResourceAvailability(MOCK_CITIZEN_RESPONSE_ENTITY, mockPartyResponseEntity));
     }
 
     @Test
@@ -146,9 +165,9 @@ class PreCheckUtilTest {
     @Test
     void generateAssetTypeResponses_ReturnsResponseWhenAssetTypeExists() {
         when(MOCK_ASSET.getType()).thenReturn("WantedAssetTypeName");
-        when(MOCK_PARTY_RESPONSE_ENTITY.getBody()).thenReturn(Collections.singletonList(MOCK_ASSET));
+        when(mockPartyResponseEntity.getBody()).thenReturn(Collections.singletonList(MOCK_ASSET));
 
-        List<PreCheckResponse> result = PreCheckUtil.generateAssetTypeResponses("WantedAssetTypeName", MOCK_PARTY_RESPONSE_ENTITY);
+        List<PreCheckResponse> result = PreCheckUtil.generateAssetTypeResponses("WantedAssetTypeName", mockPartyResponseEntity);
 
         assertFalse(result.isEmpty());
         assertFalse(result.get(0).getAssetType().isEmpty());
@@ -174,21 +193,14 @@ class PreCheckUtilTest {
         assertFalse(containsValidMunicipalityId(ResponseEntity.ok(citizen), "municipalityId"));
     }
 
-    @ParameterizedTest
-    @MethodSource("getCitizenErrorValues")
-    void resourceNotFound_CitizenError_ReturnsTrue(ResponseEntity<Object> citizenStatus) {
-        when(MOCK_CITIZEN_RESPONSE_ENTITY.getStatusCode()).thenReturn(citizenStatus.getStatusCode());
-
-        assertTrue(PreCheckUtil.checkResourceAvailability(MOCK_CITIZEN_RESPONSE_ENTITY, MOCK_PARTY_RESPONSE_ENTITY));
-    }
 
     @ParameterizedTest
     @MethodSource("getAssetTypeValues")
-    void generateAssetTypeResponses_returnResponseOk_whenAssetTypeDoesNotExist(String assetType) {
+    void generateAssetTypeResponses_returnResponseOk_whenAssetTypeDoesNotExistInList(String assetType) {
         when(MOCK_ASSET.getType()).thenReturn("RandomAssetTypeName");
-        when(MOCK_PARTY_RESPONSE_ENTITY.getBody()).thenReturn(List.of(MOCK_ASSET));
+        when(mockPartyResponseEntity.getBody()).thenReturn(List.of(MOCK_ASSET));
 
-        List<PreCheckResponse> result = generateAssetTypeResponses(assetType, MOCK_PARTY_RESPONSE_ENTITY);
+        List<PreCheckResponse> result = generateAssetTypeResponses(assetType, mockPartyResponseEntity);
 
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
@@ -199,7 +211,7 @@ class PreCheckUtilTest {
 
     @ParameterizedTest
     @MethodSource("getAssetTypeValues")
-    void generateAssetTypeResponses_returnResponseOk_whenEmpty(String assetType) {
+    void generateAssetTypeResponses_returnResponseOk_whenAssetTypeEmpty(String assetType) {
         var mockResponseEntity = mock(ResponseEntity.class);
         when(mockResponseEntity.getBody()).thenReturn(List.of());
 
@@ -212,34 +224,11 @@ class PreCheckUtilTest {
         assertTrue(result.get(0).getMessage().isEmpty());
     }
 
-    @ParameterizedTest
-    @MethodSource("getAssetTypeValues")
-    void handleNoGivenAssetType_ReturnListOfAssets(String assetType) {
-        Asset mockAsset1 = mock(Asset.class);
-        when(mockAsset1.getType()).thenReturn(assetType);
-
-        Asset mockAsset2 = mock(Asset.class);
-        when(mockAsset2.getType()).thenReturn("RandomAssetTypeName");
-
-        when(MOCK_PARTY_RESPONSE_ENTITY.getBody()).thenReturn(List.of(mockAsset1, mockAsset2));
-
-        List<PreCheckResponse> result = PreCheckUtil.generateNoAssetTypeResponses(MOCK_PARTY_RESPONSE_ENTITY);
-
-        assertFalse(result.isEmpty());
-        for (PreCheckResponse response : result) {
-            assertFalse(response.getAssetType().isEmpty());
-            assertFalse(response.isEligible());
-            assertTrue(response.getMessage().isEmpty());
-        }
-
-        verify(MOCK_PARTY_RESPONSE_ENTITY, times(1)).getBody();
-    }
-
     @Test
     void generateAssetTypeResponses_returnResponseOk_whenAssetTypeDoesNotExist() {
-        when(MOCK_PARTY_RESPONSE_ENTITY.getBody()).thenReturn(Collections.singletonList(mock(Asset.class)));
+        when(mockPartyResponseEntity.getBody()).thenReturn(Collections.singletonList(mock(Asset.class)));
 
-        List<PreCheckResponse> result = PreCheckUtil.generateAssetTypeResponses("NonExistingAssetType", MOCK_PARTY_RESPONSE_ENTITY);
+        List<PreCheckResponse> result = PreCheckUtil.generateAssetTypeResponses("NonExistingAssetType", mockPartyResponseEntity);
 
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
@@ -266,5 +255,56 @@ class PreCheckUtilTest {
             assertTrue(result.get(0).isEligible());
             assertTrue(result.get(0).getMessage().isEmpty());
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAssetTypeValues")
+    void handleNoGivenAssetType_ReturnListOfAssets(String assetType) {
+        Asset mockAsset1 = mock(Asset.class);
+        when(mockAsset1.getType()).thenReturn(assetType);
+
+        Asset mockAsset2 = mock(Asset.class);
+        when(mockAsset2.getType()).thenReturn("RandomAssetTypeName");
+
+        when(mockPartyResponseEntity.getBody()).thenReturn(List.of(mockAsset1, mockAsset2));
+
+        List<PreCheckResponse> result = PreCheckUtil.generateNoAssetTypeResponses(mockPartyResponseEntity);
+
+        assertFalse(result.isEmpty());
+        for (PreCheckResponse response : result) {
+            assertFalse(response.getAssetType().isEmpty());
+            assertFalse(response.isEligible());
+            assertTrue(response.getMessage().isEmpty());
+        }
+
+        verify(mockPartyResponseEntity, times(1)).getBody();
+    }
+
+    @Test
+    void handleNoGivenAssetType_ReturnEmptyList() {
+        when(mockPartyResponseEntity.getBody()).thenReturn(Collections.emptyList());
+
+        List<PreCheckResponse> result = PreCheckUtil.generateNoAssetTypeResponses(mockPartyResponseEntity);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void generateNoAssetTypeResponses_ReturnINTERNAL_SERVER_ERROR() {
+        when(mockPartyResponseEntity.getBody()).thenReturn(mock_party_response_entity_body);
+        when(mock_party_response_entity_body.stream()).thenThrow(new RuntimeException());
+
+
+        Exception e = assertThrows(
+                RuntimeException.class,
+                () -> PreCheckUtil.generateNoAssetTypeResponses(mockPartyResponseEntity)
+        );
+
+        var expectedResponse = new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error creating responses");
+
+        assertEquals(org.springframework.web.server.ResponseStatusException.class, e.getClass());
+        assertEquals(expectedResponse.getMessage(), e.getMessage());
+
+
     }
 }
