@@ -17,7 +17,13 @@ import static se.sundsvall.precheck.integration.partyassets.PartyAssetsIntegrati
         dismiss404 = true
 )
 public interface PartyAssetsClient {
-
+    /**
+     * Method for retrieving a list of assets.
+     *
+     * @param personId the person ID, and the status of the asset, witch in this case should always be "ACTIVE"
+     * @return An ResponseEntity with a list of assets.
+     * @throws org.zalando.problem.ThrowableProblem when called service responds with error code.
+     */
     @GetMapping(path = "/assets", produces = "application/json")
     ResponseEntity<List<Asset>> getPartyAssets(@RequestParam(name = "partyId") String partyId,
                                                @RequestParam(name = "status") String status);
