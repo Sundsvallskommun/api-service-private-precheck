@@ -1,0 +1,34 @@
+integration:
+    citizen:
+        base-url: ${env.base.url}/citizen/2.0
+        oauth2:
+            client-id: ${env.citizen.user.id}
+            client-secret: ${env.citizen.user.secret}
+            grant-type: client_credentials
+            token-uri: ${env.citizen.token.url}
+    party-assets:
+        base-url: ${env.base.url}/partyassets/1.1
+        oauth2:
+            client-id: ${env.party-assets.user.id}
+            client-secret: ${env.party-assets.user.secret}
+            grant-type: client_credentials
+            token-uri: ${env.party-assets.token.url}
+intergration:
+    citizen:
+        connection-timeout: 10000
+        read-timeout: 10000
+    party-assets:
+        connection-timeout: 10000
+        read-timeout: 10000
+logging:
+    level:
+        root: INFO
+openapi:
+    name: ${spring.application.name}
+    title: ${spring.application.name}
+    version: '@project.version@'
+spring:
+    application:
+        name: private-preCheck
+    main:
+        banner-mode: 'off'
