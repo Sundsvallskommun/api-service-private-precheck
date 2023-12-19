@@ -20,10 +20,6 @@
         <!-- Pipeline properties -->
         <generated-sources-java-path>src/main/java</generated-sources-java-path>
         <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
-        <!-- Generated sources properties -->
-        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-        <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
-        <openapi-generator-maven-plugin-version>7.1.0</openapi-generator-maven-plugin-version>
     </properties>
 
     <dependencies>
@@ -32,7 +28,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>openapi-generator-core</artifactId>
-            <version>${openapi-generator-maven-plugin-version}</version>
+            <version>7.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -62,7 +58,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>${openapi-generator-maven-plugin-version}</version>
+                <version>7.1.0</version>
                 <executions>
                     <execution>
                         <id>citizen</id>
