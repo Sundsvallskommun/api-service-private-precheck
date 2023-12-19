@@ -290,7 +290,16 @@ class PreCheckUtilTest {
     }
 
     @Test
-    void generateNoAssetTypeResponses_ReturnINTERNAL_SERVER_ERROR() {
+    void generateNoAssetTypeResponses_GetBodyThrowsRuntimeError_ReturnEmptyList() {
+        when(mockPartyResponseEntity.getBody()).thenThrow(new RuntimeException());
+
+        List<PreCheckResponse> result = PreCheckUtil.generateNoAssetTypeResponses(mockPartyResponseEntity);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void generateNoAssetTypeResponses_PartyBodyStreamThrowsGenericRuntimeError_ReturnINTERNAL_SERVER_ERROR() {
         when(mockPartyResponseEntity.getBody()).thenReturn(mock_party_response_entity_body);
         when(mock_party_response_entity_body.stream()).thenThrow(new RuntimeException());
 
