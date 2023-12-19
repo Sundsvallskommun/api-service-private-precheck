@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>se.sundsvall</groupId>
     <artifactId>api-service-private-precheck</artifactId>
-    <version>1.0</version>
+    <version>0.5</version>
     <name>api-service-private-precheck</name>
 
     <properties>
@@ -52,6 +52,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.1.0</version>
                 <executions>
                     <execution>
                         <id>citizen</id>
@@ -83,8 +84,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/integrations/partyAssets-api.json
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/integrations/partyAssets-api.json</inputSpec>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
                             <generateApis>false</generateApis>
