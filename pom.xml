@@ -22,8 +22,6 @@
         <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
         <!-- Generated sources properties -->
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-        <published.container.port.production>xxx</published.container.port.production>
-        <published.container.port.test>xxx</published.container.port.test>
         <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
         <openapi-generator-maven-plugin-version>7.1.0</openapi-generator-maven-plugin-version>
     </properties>
