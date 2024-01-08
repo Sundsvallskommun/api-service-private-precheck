@@ -1,0 +1,17 @@
+integration:
+  citizen:
+    connect-timeout: 7s
+    oauth2:
+      client-secret: citizen-secret
+      token-uri: http://citizen.token
+      client-id: citizen-id
+    base-url: http://citizen.url
+    read-timeout: 7s
+  party-assets:
+    connect-timeout: 7s
+    oauth2:
+      token-uri: http://party-assets.token
+      client-id: party-assets-id
+      client-secret: party-assets-secret
+    base-url: http://party-assets.url
+    read-timeout: 7s

@@ -1,0 +1,17 @@
+[
+  {
+    "assetType": "PARKINGPERMIT",
+    "eligible": false,
+    "message": ""
+  },
+  {
+    "assetType": "PERMIT",
+    "eligible": false,
+    "message": ""
+  },
+  {
+    "assetType": "PERMIT",
+    "eligible": false,
+    "message": ""
+  }
+]

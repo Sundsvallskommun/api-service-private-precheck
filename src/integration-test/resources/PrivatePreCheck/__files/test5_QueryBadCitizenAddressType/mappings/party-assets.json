@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/party-assets/assets?partyId=d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee&status=ACTIVE"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "[{\"id\":\"5075e7f1-90a9-40cd-be77-a3415dd205a4\",\"assetId\":\"13371337\",\"origin\":\"CASEDATA\",\"partyId\":\"d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee\",\"caseReferenceIds\":[\"404\"],\"type\":\"PARKINGPERMIT\",\"issued\":\"2023-11-23\",\"status\":\"ACTIVE\",\"description\":\"Parkeringstillstånd\",\"additionalParameters\":{}},{\"id\":\"685fa85f-9016-404c-b942-2188e9075161\",\"assetId\":\"PRH-123458789\",\"origin\":\"CASEDATA\",\"partyId\":\"d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee\",\"caseReferenceIds\":[\"123e4567-e89b-12d3-a456-426614174000\"],\"type\":\"PERMIT\",\"issued\":\"2021-01-01\",\"validTo\":\"2021-12-31\",\"status\":\"ACTIVE\",\"description\":\"Asset description\",\"additionalParameters\":{\"bar\":\"foo\"}},{\"id\":\"6f163734-25d3-4117-aca3-96ced2363c83\",\"assetId\":\"PRH-123456789\",\"origin\":\"CASEDATA\",\"partyId\":\"d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee\",\"caseReferenceIds\":[\"123e4567-e89b-12d3-a456-426614174000\"],\"type\":\"PERMIT\",\"issued\":\"2021-01-01\",\"validTo\":\"2021-12-31\",\"status\":\"ACTIVE\",\"description\":\"Asset description\",\"additionalParameters\":{\"foo\":\"bar\"}}]"
+  }
+}
