@@ -20,7 +20,7 @@ on:
       - main
 
 env:
-  JAVA_TOOL_OPTIONS: -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHan¿˚dler.count=3 -Dmaven.wagon.httpconnectionManager.ttlSeconds=60
+  JAVA_TOOL_OPTIONS: -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.httpconnectionManager.ttlSeconds=60
 jobs:
   analyze:
     name: Analyze
