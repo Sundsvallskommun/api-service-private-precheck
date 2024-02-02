@@ -1,21 +1,26 @@
 package se.sundsvall.precheck.api.model;
 
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @Builder(setterPrefix = "with")
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@Schema(description = "Pre-check response model.", accessMode = READ_ONLY)
 public class PreCheckResponse {
-    @Schema(description = "The type of asset", example = "PERMIT")
-    private String assetType;
-    @Schema(description = "If the permit(s) are eligible", example = "boolean")
-    private boolean eligible;
-    @Schema(description = "Extra message about the return data, for instance why Orderable was false", example = "String")
-    private String message;
+
+	@Schema(description = "Signal if party is a citizen of the municipality or not.", accessMode = READ_ONLY)
+	private boolean municipalCitizen;
+
+	@Schema(description = "List of permits issued to the party.", accessMode = READ_ONLY)
+	private List<Permit> permits;
 }

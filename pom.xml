@@ -5,7 +5,7 @@
     <parent>
         <groupId>se.sundsvall.dept44</groupId>
         <artifactId>dept44-service-parent</artifactId>
-        <version>4.0</version>
+        <version>4.2.0</version>
         <relativePath/>
     </parent>
     <!-- lookup parent from repository -->
@@ -20,17 +20,24 @@
         <!-- Pipeline properties -->
         <generated-sources-java-path>src/main/java</generated-sources-java-path>
         <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
+        <!-- Generated sources properties -->
+        <openapi-generator-maven-plugin.version>7.1.0</openapi-generator-maven-plugin.version>
+        <published.container.port.production>xxx</published.container.port.production>
+        <published.container.port.test>xxx</published.container.port.test>
     </properties>
 
     <dependencies>
-        <!--- openapi-generator-maven-plugin -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <!-- Auth -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>se.sundsvall.dept44</groupId>
             <artifactId>dept44-common-validators</artifactId>
@@ -52,7 +59,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.1.0</version>
+                <version>${openapi-generator-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>citizen</id>
@@ -66,6 +73,7 @@
                             <generatorName>jaxrs-spec</generatorName>
                             <generateApis>false</generateApis>
                             <configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
                                 <dateLibrary>java8</dateLibrary>
                                 <useSpringBoot3>true</useSpringBoot3>
@@ -90,6 +98,7 @@
                             <generateApis>false</generateApis>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
                                 <dateLibrary>java8</dateLibrary>
                                 <useSpringBoot3>true</useSpringBoot3>
@@ -110,8 +119,6 @@
                 <configuration>
                     <excludes>
                         <exclude>**se/sundsvall/precheck/Application*</exclude>
-                        <exclude>**/se/sundsvall/precheck/api/model/**</exclude>
-                        <exclude>**/se/sundsvall/precheck/constant/**</exclude>
                         <exclude>**/generated/**</exclude>
                     </excludes>
                     <outputDirectory>target/jacoco-report</outputDirectory>

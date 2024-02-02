@@ -1,34 +1,30 @@
-integration:
-  citizen:
-    base-url: ${env.base.url}/citizen/2.0
-    oauth2:
-      client-id: ${env.citizen.user.id}
-      client-secret: ${env.citizen.user.secret}
-      grant-type: client_credentials
-      token-uri: ${env.citizen.token.url}
-  party-assets:
-    base-url: ${env.base.url}/partyassets/1.1
-    oauth2:
-      client-id: ${env.party-assets.user.id}
-      client-secret: ${env.party-assets.user.secret}
-      grant-type: client_credentials
-      token-uri: ${env.party-assets.token.url}
-intergration:
-  citizen:
-    connection-timeout: 10000
-    read-timeout: 10000
-  party-assets:
-    connection-timeout: 10000
-    read-timeout: 10000
-logging:
-  level:
-    root: INFO
 openapi:
   name: ${spring.application.name}
   title: ${spring.application.name}
   version: '@project.version@'
+springdoc:
+  swagger-ui:
+    operationsSorter: alpha
+logging:
+  level:
+    root: INFO
 spring:
   application:
-    name: private-preCheck
-  main:
-    banner-mode: 'off'
+    name: api-private-precheck
+  security:
+    oauth2:
+      client:
+        registration:
+          citizen:
+            authorization-grant-type: client_credentials
+            provider: citizen
+          party-assets:
+            authorization-grant-type: client_credentials
+            provider: party-assets
+integration:
+  citizen:
+    connectTimeout: 5
+    readTimeout: 30
+  party-assets:
+    connectTimeout: 5
+    readTimeout: 30

@@ -1,0 +1,51 @@
+[
+	{
+		"id": "d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee",
+		"assetId": "13371337",
+		"origin": "CASEDATA",
+		"partyId": "2927622b-6540-431f-9841-4cb15fe8e2d6",
+		"caseReferenceIds": [
+			"404"
+		],
+		"type": "PARKING_PERMIT",
+		"issued": "2023-11-23",
+		"status": "EXPIRED",
+		"description": "Parkeringstillstånd",
+		"additionalParameters": {}
+	},
+	{
+		"id": "685fa85f-9016-404c-b942-2188e9075161",
+		"assetId": "PRH-123458789",
+		"origin": "CASEDATA",
+		"partyId": "2927622b-6540-431f-9841-4cb15fe8e2d6",
+		"caseReferenceIds": [
+			"123e4567-e89b-12d3-a456-426614174000"
+		],
+		"type": "ALKT_PERMIT",
+		"issued": "2021-01-01",
+		"validTo": "2091-12-31",
+		"status": "ACTIVE",
+		"description": "Alkoholtillstånd",
+		"additionalParameters": {
+			"bar": "foo"
+		}
+	},
+	{
+		"id": "6f163734-25d3-4117-aca3-96ced2363c83",
+		"assetId": "PRH-123456789",
+		"origin": "CASEDATA",
+		"partyId": "2927622b-6540-431f-9841-4cb15fe8e2d6",
+		"caseReferenceIds": [
+			"123e4567-e89b-12d3-a456-426614174000"
+		],
+		"type": "OTHER_PERMIT",
+		"issued": "2021-01-01",
+		"validTo": "2021-12-31",
+		"status": "BLOCKED",
+		"statusReason": "Ongoing fraud investigation",
+		"description": "Asset description",
+		"additionalParameters": {
+			"foo": "bar"
+		}
+	}
+]
