@@ -4,8 +4,8 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>4.2.0</version>
-		<relativePath />
+		<version>4.3.0</version>
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>se.sundsvall</groupId>
