@@ -17,8 +17,7 @@ paths:
     get:
       tags:
       - Pre-check
-      summary: Fetch permit(s) issued by the provided municipality to the provided
-        partyId
+      summary: Fetch permit(s) issued by the provided municipality to the citizen matching the provided partyId
       operationId: fetchPermits
       parameters:
       - name: partyId

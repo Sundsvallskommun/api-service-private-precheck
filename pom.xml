@@ -8,7 +8,6 @@
         <version>4.2.0</version>
         <relativePath/>
     </parent>
-    <!-- lookup parent from repository -->
     <modelVersion>4.0.0</modelVersion>
     <groupId>se.sundsvall</groupId>
     <artifactId>api-service-private-precheck</artifactId>
@@ -21,7 +20,6 @@
         <generated-sources-java-path>src/main/java</generated-sources-java-path>
         <generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
         <!-- Generated sources properties -->
-        <openapi-generator-maven-plugin.version>7.1.0</openapi-generator-maven-plugin.version>
         <published.container.port.production>xxx</published.container.port.production>
         <published.container.port.test>xxx</published.container.port.test>
     </properties>
@@ -59,7 +57,6 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>${openapi-generator-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>citizen</id>
@@ -68,10 +65,10 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/integrations/citizen-api.json</inputSpec>
-                            <generateSupportingFiles>false</generateSupportingFiles>
                             <output>${generated-sources-path}</output>
                             <generatorName>jaxrs-spec</generatorName>
                             <generateApis>false</generateApis>
+                            <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
 								<useSpringBoot3>true</useSpringBoot3>
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
@@ -102,7 +99,7 @@
                                 <sourceFolder>${generated-sources-java-path}</sourceFolder>
                                 <dateLibrary>java8</dateLibrary>
                                 <useSpringBoot3>true</useSpringBoot3>
-                                <modelPackage>generated.client.partyAssets</modelPackage>
+                                <modelPackage>generated.client.partyassets</modelPackage>
                                 <openApiNullable>false</openApiNullable>
                                 <generatePom>false</generatePom>
                                 <useBeanValidation>false</useBeanValidation>

@@ -12,13 +12,13 @@ import se.sundsvall.precheck.integration.citizen.configuration.CitizenConfigurat
 @FeignClient(name = CitizenConfiguration.CLIENT_ID, url = "${integration.citizen.url}", configuration = CitizenConfiguration.class)
 public interface CitizenClient {
 
-    /**
-     * Method for retrieving a citizen.
-     *
-     * @param personId the person ID
-     * @return An object with citizen data.
-     * @throws org.zalando.problem.ThrowableProblem when called service responds with error code.
-     */
-    @GetMapping(path = "/{personId}", produces = APPLICATION_JSON_VALUE)
+	/**
+	 * Method for retrieving a citizen.
+	 *
+	 * @param personId the person ID
+	 * @return An object with citizen data.
+	 * @throws org.zalando.problem.ThrowableProblem when called service responds with error code.
+	 */
+	@GetMapping(path = "/{personId}", produces = APPLICATION_JSON_VALUE)
 	CitizenExtended getCitizen(@PathVariable("personId") String personId);
 }

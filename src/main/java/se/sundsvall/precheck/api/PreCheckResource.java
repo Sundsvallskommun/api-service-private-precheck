@@ -37,7 +37,7 @@ public class PreCheckResource {
 	}
 
 	@GetMapping(path = "/{partyId}", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
-	@Operation(summary = "Fetch permit(s) issued by the provided municipality to the provided partyId")
+	@Operation(summary = "Fetch permit(s) issued by the provided municipality to the citizen matching the provided partyId")
 	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<PreCheckResponse> fetchPermits(

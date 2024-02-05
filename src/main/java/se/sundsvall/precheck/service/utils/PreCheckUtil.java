@@ -21,5 +21,5 @@ public final class PreCheckUtil {
 		return ofNullable(citizen.getAddresses()).orElse(emptyList()).stream()
 			.filter(address -> POPULATION_REGISTRATION_ADDRESS.equalsIgnoreCase(address.getAddressType()))
 			.anyMatch(address -> Objects.equals(address.getMunicipality(), municipalityId));
-    }
+	}
 }

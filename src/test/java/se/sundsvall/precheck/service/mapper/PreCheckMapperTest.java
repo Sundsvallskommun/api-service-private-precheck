@@ -1,8 +1,8 @@
 package se.sundsvall.precheck.service.mapper;
 
-import static generated.client.partyAssets.Status.ACTIVE;
-import static generated.client.partyAssets.Status.BLOCKED;
-import static generated.client.partyAssets.Status.EXPIRED;
+import static generated.client.partyassets.Status.ACTIVE;
+import static generated.client.partyassets.Status.BLOCKED;
+import static generated.client.partyassets.Status.EXPIRED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import generated.client.partyAssets.Asset;
+import generated.client.partyassets.Asset;
 import se.sundsvall.precheck.api.model.Permit;
 
 class PreCheckMapperTest {

@@ -1,6 +1,6 @@
 package se.sundsvall.precheck.service;
 
-import static generated.client.partyAssets.Status.ACTIVE;
+import static generated.client.partyassets.Status.ACTIVE;
 import static se.sundsvall.precheck.service.mapper.PreCheckMapper.toPermits;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.isCitizenOfMunicipality;
 
@@ -19,15 +19,15 @@ public final class PreCheckService {
 	public PreCheckService(CitizenClient citizenClient, PartyAssetsClient partyAssetsClient) {
 		this.citizenClient = citizenClient;
 		this.partyAssetsClient = partyAssetsClient;
-    }
+	}
 
 	public PreCheckResponse fetchPermits(String partyId, String municipalityId, final String assetType) {
 		final var citizen = citizenClient.getCitizen(partyId);
 		final var partyAssets = partyAssetsClient.getPartyAssets(partyId, ACTIVE);
 
-        return PreCheckResponse.builder()
-        	.withMunicipalCitizen(isCitizenOfMunicipality(citizen, municipalityId))
+		return PreCheckResponse.builder()
+			.withMunicipalCitizen(isCitizenOfMunicipality(citizen, municipalityId))
 			.withPermits(toPermits(partyAssets, assetType))
 			.build();
-    }
+	}
 }
