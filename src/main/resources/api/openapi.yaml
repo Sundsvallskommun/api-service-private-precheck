@@ -1,0 +1,321 @@
+openapi: 3.0.1
+info:
+  title: api-private-precheck
+  contact: {}
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: "0.5"
+servers:
+- url: http://localhost:57764
+  description: Generated server url
+tags:
+- name: Pre-check
+  description: Pre-check operations
+paths:
+  /precheck/{partyId}:
+    get:
+      tags:
+      - Pre-check
+      summary: Fetch permit(s) issued by the provided municipality to the citizen matching the provided partyId
+      operationId: fetchPermits
+      parameters:
+      - name: partyId
+        in: path
+        description: PartyId for the citizen
+        required: true
+        schema:
+          type: string
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: municipalityId
+        in: query
+        description: MunicipalityId for the citizen
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: assetType
+        in: query
+        description: AssetType to filter on (optional)
+        required: false
+        allowEmptyValue: true
+        schema:
+          type: string
+        example: PARKING_PERMIT
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreCheckResponse'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/PreCheckResponse'
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Problem'
+                - $ref: '#/components/schemas/ConstraintViolationProblem'
+  /api-docs:
+    get:
+      tags:
+      - API
+      summary: OpenAPI
+      operationId: getApiDocs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/yaml:
+              schema:
+                type: string
+      x-auth-type: None
+      x-throttling-tier: Unlimited
+      x-wso2-mutual-ssl: Optional
+components:
+  schemas:
+    Problem:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StatusType'
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        title:
+          type: string
+    StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    ConstraintViolationProblem:
+      type: object
+      properties:
+        cause:
+          $ref: '#/components/schemas/ThrowableProblem'
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        type:
+          type: string
+          format: uri
+        status:
+          $ref: '#/components/schemas/StatusType'
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Violation'
+        title:
+          type: string
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    ThrowableProblem:
+      type: object
+      properties:
+        cause:
+          $ref: '#/components/schemas/ThrowableProblem'
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        message:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusType'
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        title:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    Violation:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+    Permit:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of permit.
+          readOnly: true
+          example: PARKING_PERMIT
+        orderable:
+          type: boolean
+          description: If the permit is orderable or not.
+          readOnly: true
+        reason:
+          type: string
+          description: "Extra message about the return data, for instance why the\
+            \ permit is not possible to order."
+          readOnly: true
+      description: Permit model.
+      readOnly: true
+    PreCheckResponse:
+      type: object
+      properties:
+        municipalCitizen:
+          type: boolean
+          description: Signal if party is a citizen of the municipality or not.
+          readOnly: true
+        permits:
+          type: array
+          description: List of permits issued to the party.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Permit'
+      description: Pre-check response model.
+      readOnly: true
+  securitySchemes: {}

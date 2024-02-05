@@ -1,0 +1,25 @@
+integration:
+  citizen:
+    connectTimeout: 19
+    readTimeout: 21
+    url: http://api-citizen.url
+  party-assets:
+    connectTimeout: 18
+    readTimeout: 22
+    url: http://api-party-assets.url
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          citizen:
+            token-uri: http://api-gateway.url
+          party-assets:
+            token-uri: http://api-gateway.url
+        registration:
+          citizen:
+            client-id: the-client-id
+            client-secret: the-client-secret
+          party-assets:
+            client-id: the-client-id
+            client-secret: the-client-secret
