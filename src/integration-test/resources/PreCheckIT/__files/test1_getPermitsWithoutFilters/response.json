@@ -1,18 +1,18 @@
 {
-	"municipalCitizen": true,
 	"permits": [
 		{
-			"type": "PARKING_PERMIT",
-			"orderable": true
+			"orderable": true,
+			"type": "PARKING_PERMIT"
 		},
 		{
-			"type": "ALKT_PERMIT",
-			"orderable": false
-		},
-		{
-			"type": "OTHER_PERMIT",
 			"orderable": false,
-			"reason": "Ongoing fraud investigation"
+			"type": "ALKT_PERMIT"
+		},
+		{
+			"reason": "Ongoing fraud investigation",
+			"orderable": false,
+			"type": "OTHER_PERMIT"
 		}
-	]
+	],
+	"municipalCitizen": true
 }

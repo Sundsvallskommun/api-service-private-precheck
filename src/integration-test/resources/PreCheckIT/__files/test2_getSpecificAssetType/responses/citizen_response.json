@@ -1,22 +1,20 @@
 {
-	"personId": "2927622b-6540-431f-9841-4cb15fe8e2d6",
-	"givenname": "Ethan",
-	"lastname": "Hawke",
+	"addresses": [{
+		"country": "SVERIGE",
+		"address": "UNDERCOVERSTREET 1",
+		"city": "SUNDSVALL",
+		"addressType": "POPULATION_REGISTRATION_ADDRESS",
+		"postalCode": "800 00",
+		"realEstateDescription": "NOWAYPOINT 1",
+		"municipality": "2281",
+		"emigrated": false
+	}],
 	"gender": "M",
-	"civilStatus": "OG",
+	"givenname": "Ethan",
 	"nrDate": "20201002",
+	"personId": "2927622b-6540-431f-9841-4cb15fe8e2d6",
 	"classified": "N",
 	"protectedNR": "N",
-	"addresses": [
-		{
-			"realEstateDescription": "NOWAYPOINT 1",
-			"address": "UNDERCOVERSTREET 1",
-			"postalCode": "800 00",
-			"city": "SUNDSVALL",
-			"municipality": "2281",
-			"country": "SVERIGE",
-			"emigrated": false,
-			"addressType": "POPULATION_REGISTRATION_ADDRESS"
-		}
-	]
+	"lastname": "Hawke",
+	"civilStatus": "OG"
 }

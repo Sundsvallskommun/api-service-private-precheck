@@ -15,8 +15,8 @@ public interface CitizenClient {
 	/**
 	 * Method for retrieving a citizen.
 	 *
-	 * @param personId the person ID
-	 * @return An object with citizen data.
+	 * @param  personId                             the person ID
+	 * @return                                      An object with citizen data.
 	 * @throws org.zalando.problem.ThrowableProblem when called service responds with error code.
 	 */
 	@GetMapping(path = "/{personId}", produces = APPLICATION_JSON_VALUE)
