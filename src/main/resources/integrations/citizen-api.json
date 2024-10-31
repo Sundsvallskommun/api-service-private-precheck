@@ -1,983 +1,609 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Citizen API",
-    "version": "v2"
-  },
-  "servers": [
-    {
-      "url": "https://api-i-test.sundsvall.se/citizen/2.0"
-    },
-    {
-      "url": "http://api-i-test.sundsvall.se/citizen/2.0"
-    }
-  ],
-  "security": [
-    {
-      "Bearer": []
-    }
-  ],
-  "tags": [
-    {
-      "name": "Citizen",
-      "description": "Handles information about Citizens"
-    }
-  ],
-  "paths": {
-    "/api-docs": {
-      "get": {
-        "tags": [
-          "Citizen"
-        ],
-        "summary": "OpenAPI specification",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "default": []
-          }
-        ],
-        "x-auth-type": "None",
-        "x-throttling-tier": "Unlimited"
-      }
-    },
-    "/{personId}": {
-      "get": {
-        "tags": [
-          "Citizen"
-        ],
-        "summary": "Show information about specific citizen",
-        "parameters": [
-          {
-            "name": "personId",
-            "in": "path",
-            "description": "ID for specific citizen",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "ShowClassified",
-            "in": "query",
-            "description": "If true, include search for classified persons",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CitizenExtended"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CitizenExtended"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CitizenExtended"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "default": []
-          }
-        ],
-        "x-throttling-tier": "Unlimited"
-      }
-    },
-    "/changedaddress": {
-      "get": {
-        "tags": [
-          "Citizen"
-        ],
-        "summary": "Show citizens that have moved since the given date",
-        "parameters": [
-          {
-            "name": "changedDateFrom",
-            "in": "query",
-            "description": "From-date for move.",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CitizenWithChangedAddress"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CitizenWithChangedAddress"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CitizenWithChangedAddress"
-                  }
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "default": []
-          }
-        ],
-        "x-throttling-tier": "Unlimited"
-      }
-    },
-    "/{personId}/personnumber": {
-      "get": {
-        "tags": [
-          "Citizen"
-        ],
-        "summary": "Get Personal identity number from personId",
-        "parameters": [
-          {
-            "name": "personId",
-            "in": "path",
-            "description": "personID, Guid, for specific citizen",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "default": []
-          }
-        ],
-        "x-throttling-tier": "Unlimited"
-      }
-    },
-    "/{personNumber}/guid": {
-      "get": {
-        "tags": [
-          "Citizen"
-        ],
-        "summary": "Get personId from Personal identity number",
-        "parameters": [
-          {
-            "name": "personNumber",
-            "in": "path",
-            "description": "Personal identity number for specific citizen",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "default": []
-          }
-        ],
-        "x-throttling-tier": "Unlimited"
-      }
-    },
-    "/guid": {
-      "post": {
-        "tags": [
-          "Citizen"
-        ],
-        "summary": "Create person",
-        "requestBody": {
-          "description": "Personal identity number for specific citizen",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ModelPostPerson"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ModelPostPerson"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ModelPostPerson"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "default": []
-          }
-        ],
-        "x-throttling-tier": "Unlimited"
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "CitizenAddress": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "nrDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "realEstateDescription": {
-            "type": "string",
-            "nullable": true
-          },
-          "co": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "addressArea": {
-            "type": "string",
-            "nullable": true
-          },
-          "addressNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "addressLetter": {
-            "type": "string",
-            "nullable": true
-          },
-          "appartmentNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "postalCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "county": {
-            "type": "string",
-            "nullable": true
-          },
-          "municipality": {
-            "type": "string",
-            "nullable": true
-          },
-          "country": {
-            "type": "string",
-            "nullable": true
-          },
-          "emigrated": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "addressType": {
-            "type": "string",
-            "nullable": true
-          },
-          "xCoordLocal": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "yCoordLocal": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CitizenExtended": {
-        "type": "object",
-        "properties": {
-          "personId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "givenname": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastname": {
-            "type": "string",
-            "nullable": true
-          },
-          "gender": {
-            "type": "string",
-            "nullable": true
-          },
-          "civilStatus": {
-            "type": "string",
-            "nullable": true
-          },
-          "nrDate": {
-            "type": "string",
-            "nullable": true
-          },
-          "classified": {
-            "type": "string",
-            "nullable": true
-          },
-          "protectedNR": {
-            "type": "string",
-            "nullable": true
-          },
-          "addresses": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/CitizenAddress"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "CitizenWithChangedAddress": {
-        "type": "object",
-        "properties": {
-          "personId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "personNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "classified": {
-            "type": "string",
-            "nullable": true
-          },
-          "unRegCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "unRegDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "gender": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenname": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastname": {
-            "type": "string",
-            "nullable": true
-          },
-          "typeOfSchool": {
-            "type": "string",
-            "nullable": true
-          },
-          "custodianFor": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/CustodyChildrenPupil"
-            }
-          },
-          "addresses": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/CitizenAddress"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "CustodyChildrenPupil": {
-        "type": "object",
-        "properties": {
-          "personnumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "typeOfSchool": {
-            "type": "string",
-            "nullable": true
-          },
-          "unRegCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "unRegDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ModelPostPerson": {
-        "type": "object",
-        "properties": {
-          "personalNumber": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": {}
-      }
-    },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "apiKey",
-        "description": "JWT Authorization header using the Bearer scheme.",
-        "name": "X-JWT-Assertion",
-        "in": "header"
-      },
-      "default": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://api-i-test.sundsvall.se/authorize",
-            "scopes": {}
-          }
-        }
-      }
-    }
-  }
+	"security": [{"Bearer": []}],
+	"components": {
+		"schemas": {
+			"CitizenExtended": {
+				"additionalProperties": false,
+				"type": "object",
+				"properties": {
+					"addresses": {
+						"nullable": true,
+						"type": "array",
+						"items": {"$ref": "#/components/schemas/CitizenAddress"}
+					},
+					"gender": {
+						"nullable": true,
+						"type": "string"
+					},
+					"givenname": {
+						"nullable": true,
+						"type": "string"
+					},
+					"nrDate": {
+						"nullable": true,
+						"type": "string"
+					},
+					"personId": {
+						"format": "uuid",
+						"type": "string"
+					},
+					"classified": {
+						"nullable": true,
+						"type": "string"
+					},
+					"protectedNR": {
+						"nullable": true,
+						"type": "string"
+					},
+					"lastname": {
+						"nullable": true,
+						"type": "string"
+					},
+					"civilStatus": {
+						"nullable": true,
+						"type": "string"
+					}
+				}
+			},
+			"CustodyChildrenPupil": {
+				"additionalProperties": false,
+				"type": "object",
+				"properties": {
+					"typeOfSchool": {
+						"nullable": true,
+						"type": "string"
+					},
+					"personnumber": {
+						"nullable": true,
+						"type": "string"
+					},
+					"unRegCode": {
+						"nullable": true,
+						"type": "string"
+					},
+					"unRegDate": {
+						"nullable": true,
+						"format": "date-time",
+						"type": "string"
+					}
+				}
+			},
+			"ModelPostPerson": {
+				"additionalProperties": false,
+				"type": "object",
+				"properties": {"personalNumber": {
+					"nullable": true,
+					"type": "string"
+				}}
+			},
+			"CitizenWithChangedAddress": {
+				"additionalProperties": false,
+				"type": "object",
+				"properties": {
+					"typeOfSchool": {
+						"nullable": true,
+						"type": "string"
+					},
+					"addresses": {
+						"nullable": true,
+						"type": "array",
+						"items": {"$ref": "#/components/schemas/CitizenAddress"}
+					},
+					"unRegCode": {
+						"nullable": true,
+						"type": "string"
+					},
+					"gender": {
+						"nullable": true,
+						"type": "string"
+					},
+					"unRegDate": {
+						"nullable": true,
+						"format": "date-time",
+						"type": "string"
+					},
+					"givenname": {
+						"nullable": true,
+						"type": "string"
+					},
+					"personId": {
+						"format": "uuid",
+						"type": "string"
+					},
+					"classified": {
+						"nullable": true,
+						"type": "string"
+					},
+					"custodianFor": {
+						"nullable": true,
+						"type": "array",
+						"items": {"$ref": "#/components/schemas/CustodyChildrenPupil"}
+					},
+					"personNumber": {
+						"nullable": true,
+						"type": "string"
+					},
+					"lastname": {
+						"nullable": true,
+						"type": "string"
+					}
+				}
+			},
+			"CitizenAddress": {
+				"additionalProperties": false,
+				"type": "object",
+				"properties": {
+					"country": {
+						"nullable": true,
+						"type": "string"
+					},
+					"yCoordLocal": {
+						"nullable": true,
+						"format": "double",
+						"type": "number"
+					},
+					"address": {
+						"nullable": true,
+						"type": "string"
+					},
+					"city": {
+						"nullable": true,
+						"type": "string"
+					},
+					"addressType": {
+						"nullable": true,
+						"type": "string"
+					},
+					"xCoordLocal": {
+						"nullable": true,
+						"format": "double",
+						"type": "number"
+					},
+					"addressLetter": {
+						"nullable": true,
+						"type": "string"
+					},
+					"postalCode": {
+						"nullable": true,
+						"type": "string"
+					},
+					"county": {
+						"nullable": true,
+						"type": "string"
+					},
+					"municipality": {
+						"nullable": true,
+						"type": "string"
+					},
+					"nrDate": {
+						"nullable": true,
+						"format": "date-time",
+						"type": "string"
+					},
+					"co": {
+						"nullable": true,
+						"type": "string"
+					},
+					"appartmentNumber": {
+						"nullable": true,
+						"type": "string"
+					},
+					"realEstateDescription": {
+						"nullable": true,
+						"type": "string"
+					},
+					"addressNumber": {
+						"nullable": true,
+						"type": "string"
+					},
+					"emigrated": {
+						"nullable": true,
+						"type": "boolean"
+					},
+					"addressArea": {
+						"nullable": true,
+						"type": "string"
+					},
+					"status": {
+						"nullable": true,
+						"type": "string"
+					}
+				}
+			},
+			"ProblemDetails": {
+				"additionalProperties": {},
+				"type": "object",
+				"properties": {
+					"instance": {
+						"nullable": true,
+						"type": "string"
+					},
+					"detail": {
+						"nullable": true,
+						"type": "string"
+					},
+					"type": {
+						"nullable": true,
+						"type": "string"
+					},
+					"title": {
+						"nullable": true,
+						"type": "string"
+					},
+					"status": {
+						"nullable": true,
+						"format": "int32",
+						"type": "integer"
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"default": {
+				"flows": {"implicit": {
+					"authorizationUrl": "https://api-i-test.sundsvall.se/authorize",
+					"scopes": {}
+				}},
+				"type": "oauth2"
+			},
+			"Bearer": {
+				"in": "header",
+				"name": "X-JWT-Assertion",
+				"description": "JWT Authorization header using the Bearer scheme.",
+				"type": "apiKey"
+			}
+		}
+	},
+	"servers": [
+		{"url": "https://api-i-test.sundsvall.se/citizen/2.0"},
+		{"url": "http://api-i-test.sundsvall.se/citizen/2.0"}
+	],
+	"openapi": "3.0.1",
+	"paths": {
+		"/{personId}": {"get": {
+			"summary": "Show information about specific citizen",
+			"security": [{"default": []}],
+			"responses": {
+				"200": {
+					"description": "Success",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/CitizenExtended"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/CitizenExtended"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/CitizenExtended"}}
+					}
+				},
+				"400": {
+					"description": "Bad Request",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"500": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"204": {"description": "No Content"},
+				"503": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				}
+			},
+			"parameters": [
+				{
+					"schema": {
+						"format": "uuid",
+						"type": "string"
+					},
+					"in": "path",
+					"explode": false,
+					"name": "personId",
+					"description": "ID for specific citizen",
+					"style": "simple",
+					"required": true
+				},
+				{
+					"schema": {
+						"default": false,
+						"type": "boolean"
+					},
+					"in": "query",
+					"explode": true,
+					"name": "ShowClassified",
+					"description": "If true, include search for classified persons",
+					"style": "form",
+					"required": false
+				}
+			],
+			"x-throttling-tier": "Unlimited",
+			"tags": ["Citizen"]
+		}},
+		"/{personNumber}/guid": {"get": {
+			"summary": "Get personId from Personal identity number",
+			"security": [{"default": []}],
+			"responses": {
+				"200": {
+					"description": "Success",
+					"content": {
+						"application/json": {"schema": {
+							"format": "uuid",
+							"type": "string"
+						}},
+						"text/json": {"schema": {
+							"format": "uuid",
+							"type": "string"
+						}},
+						"text/plain": {"schema": {
+							"format": "uuid",
+							"type": "string"
+						}}
+					}
+				},
+				"400": {
+					"description": "Bad Request",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"500": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"204": {"description": "No Content"},
+				"404": {
+					"description": "Not Found",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"503": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				}
+			},
+			"parameters": [{
+				"schema": {"type": "string"},
+				"in": "path",
+				"explode": false,
+				"name": "personNumber",
+				"description": "Personal identity number for specific citizen",
+				"style": "simple",
+				"required": true
+			}],
+			"x-throttling-tier": "Unlimited",
+			"tags": ["Citizen"]
+		}},
+		"/changedaddress": {"get": {
+			"summary": "Show citizens that have moved since the given date",
+			"security": [{"default": []}],
+			"responses": {
+				"200": {
+					"description": "Success",
+					"content": {
+						"application/json": {"schema": {
+							"type": "array",
+							"items": {"$ref": "#/components/schemas/CitizenWithChangedAddress"}
+						}},
+						"text/json": {"schema": {
+							"type": "array",
+							"items": {"$ref": "#/components/schemas/CitizenWithChangedAddress"}
+						}},
+						"text/plain": {"schema": {
+							"type": "array",
+							"items": {"$ref": "#/components/schemas/CitizenWithChangedAddress"}
+						}}
+					}
+				},
+				"400": {
+					"description": "Bad Request",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"500": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"204": {"description": "No Content"},
+				"503": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				}
+			},
+			"parameters": [{
+				"schema": {
+					"format": "date-time",
+					"type": "string"
+				},
+				"in": "query",
+				"explode": true,
+				"name": "changedDateFrom",
+				"description": "From-date for move.",
+				"style": "form",
+				"required": false
+			}],
+			"x-throttling-tier": "Unlimited",
+			"tags": ["Citizen"]
+		}},
+		"/{personId}/personnumber": {"get": {
+			"summary": "Get Personal identity number from personId",
+			"security": [{"default": []}],
+			"responses": {
+				"200": {
+					"description": "Success",
+					"content": {
+						"application/json": {"schema": {"type": "string"}},
+						"text/json": {"schema": {"type": "string"}},
+						"text/plain": {"schema": {"type": "string"}}
+					}
+				},
+				"400": {
+					"description": "Bad Request",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"500": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"204": {"description": "No Content"},
+				"503": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				}
+			},
+			"parameters": [{
+				"schema": {
+					"format": "uuid",
+					"type": "string"
+				},
+				"in": "path",
+				"explode": false,
+				"name": "personId",
+				"description": "personID, Guid, for specific citizen",
+				"style": "simple",
+				"required": true
+			}],
+			"x-throttling-tier": "Unlimited",
+			"tags": ["Citizen"]
+		}},
+		"/guid": {"post": {
+			"summary": "Create person",
+			"security": [{"default": []}],
+			"requestBody": {
+				"description": "Personal identity number for specific citizen",
+				"content": {
+					"application/*+json": {"schema": {"$ref": "#/components/schemas/ModelPostPerson"}},
+					"application/json": {"schema": {"$ref": "#/components/schemas/ModelPostPerson"}},
+					"text/json": {"schema": {"$ref": "#/components/schemas/ModelPostPerson"}}
+				}
+			},
+			"responses": {
+				"200": {
+					"description": "Success",
+					"content": {
+						"application/json": {"schema": {
+							"format": "uuid",
+							"type": "string"
+						}},
+						"text/json": {"schema": {
+							"format": "uuid",
+							"type": "string"
+						}},
+						"text/plain": {"schema": {
+							"format": "uuid",
+							"type": "string"
+						}}
+					}
+				},
+				"400": {
+					"description": "Bad Request",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"500": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"404": {
+					"description": "Not Found",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"503": {
+					"description": "Server Error",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				},
+				"409": {
+					"description": "Conflict",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}},
+						"text/plain": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}
+					}
+				}
+			},
+			"x-throttling-tier": "Unlimited",
+			"tags": ["Citizen"]
+		}},
+		"/api-docs": {"get": {
+			"summary": "OpenAPI specification",
+			"security": [{"default": []}],
+			"x-auth-type": "None",
+			"responses": {"200": {
+				"description": "Success",
+				"content": {
+					"application/json": {"schema": {"type": "string"}},
+					"text/json": {"schema": {"type": "string"}},
+					"text/plain": {"schema": {"type": "string"}}
+				}
+			}},
+			"x-throttling-tier": "Unlimited",
+			"tags": ["Citizen"]
+		}}
+	},
+	"info": {
+		"title": "Citizen API",
+		"version": "v2"
+	},
+	"tags": [{
+		"name": "Citizen",
+		"description": "Handles information about Citizens"
+	}]
 }

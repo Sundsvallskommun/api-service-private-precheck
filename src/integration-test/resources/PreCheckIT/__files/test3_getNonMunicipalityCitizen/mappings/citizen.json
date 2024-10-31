@@ -1,13 +1,11 @@
 {
-  "request": {
-    "method": "GET",
-    "urlPath": "/citizen/2927622b-6540-431f-9841-4cb15fe8e2d6"
-  },
-  "response": {
-    "status": 200,
-    "headers": {
-      "Content-Type": "application/json"
-    },
-    "bodyFileName": "test3_getNonMunicipalityCitizen/responses/citizen_response.json"
-  }
+	"request": {
+		"method": "GET",
+		"urlPath": "/citizen/2927622b-6540-431f-9841-4cb15fe8e2d6"
+	},
+	"response": {
+		"headers": {"Content-Type": "application/json"},
+		"bodyFileName": "test3_getNonMunicipalityCitizen/responses/citizen_response.json",
+		"status": 200
+	}
 }
