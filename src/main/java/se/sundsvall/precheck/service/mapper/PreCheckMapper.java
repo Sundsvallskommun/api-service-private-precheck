@@ -5,10 +5,9 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 
+import generated.client.partyassets.Asset;
 import java.util.List;
 import java.util.Objects;
-
-import generated.client.partyassets.Asset;
 import se.sundsvall.precheck.api.model.Permit;
 
 public class PreCheckMapper {

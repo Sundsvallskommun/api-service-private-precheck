@@ -6,11 +6,9 @@ import static generated.client.partyassets.Status.EXPIRED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
 import generated.client.partyassets.Asset;
+import java.util.List;
+import org.junit.jupiter.api.Test;
 import se.sundsvall.precheck.api.model.Permit;
 
 class PreCheckMapperTest {

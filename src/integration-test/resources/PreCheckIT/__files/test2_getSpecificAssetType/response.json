@@ -1,7 +1,9 @@
 {
-	"permits": [{
-		"orderable": true,
-		"type": "PARKING_PERMIT"
-	}],
+	"permits": [
+		{
+			"orderable": true,
+			"type": "PARKING_PERMIT"
+		}
+	],
 	"municipalCitizen": true
 }

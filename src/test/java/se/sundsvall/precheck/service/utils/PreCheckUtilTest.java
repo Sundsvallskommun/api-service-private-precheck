@@ -2,10 +2,9 @@ package se.sundsvall.precheck.service.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Test;
-
 import generated.client.citizen.CitizenAddress;
 import generated.client.citizen.CitizenExtended;
+import org.junit.jupiter.api.Test;
 
 class PreCheckUtilTest {
 	private static final String MUNICIPALITY_ID = "1234";

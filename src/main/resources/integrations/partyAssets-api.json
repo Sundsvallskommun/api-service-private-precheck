@@ -1,5 +1,9 @@
 {
-	"security": [{"default": []}],
+	"security": [
+		{
+			"default": []
+		}
+	],
 	"components": {
 		"schemas": {
 			"Status": {
@@ -15,8 +19,12 @@
 			"Violation": {
 				"type": "object",
 				"properties": {
-					"field": {"type": "string"},
-					"message": {"type": "string"}
+					"field": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
 				}
 			},
 			"AssetUpdateRequest": {
@@ -35,7 +43,9 @@
 							"example": "{\"foo\":\"bar\"}"
 						},
 						"type": "object",
-						"example": {"foo": "bar"}
+						"example": {
+							"foo": "bar"
+						}
 					},
 					"caseReferenceIds": {
 						"description": "Case reference ids",
@@ -45,7 +55,9 @@
 							"type": "string",
 							"example": "[\"123e4567-e89b-12d3-a456-426614174000\"]"
 						},
-						"example": ["123e4567-e89b-12d3-a456-426614174000"]
+						"example": [
+							"123e4567-e89b-12d3-a456-426614174000"
+						]
 					},
 					"validTo": {
 						"format": "date",
@@ -53,13 +65,17 @@
 						"type": "string",
 						"example": "2021-12-31"
 					},
-					"status": {"$ref": "#/components/schemas/Status"}
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					}
 				}
 			},
 			"StatusType": {
 				"type": "object",
 				"properties": {
-					"reasonPhrase": {"type": "string"},
+					"reasonPhrase": {
+						"type": "string"
+					},
 					"statusCode": {
 						"format": "int32",
 						"type": "integer"
@@ -104,7 +120,9 @@
 							"example": "{\"foo\":\"bar\"}"
 						},
 						"type": "object",
-						"example": {"foo": "bar"}
+						"example": {
+							"foo": "bar"
+						}
 					},
 					"caseReferenceIds": {
 						"description": "Case reference ids",
@@ -114,7 +132,9 @@
 							"type": "string",
 							"example": "[\"123e4567-e89b-12d3-a456-426614174000\"]"
 						},
-						"example": ["123e4567-e89b-12d3-a456-426614174000"]
+						"example": [
+							"123e4567-e89b-12d3-a456-426614174000"
+						]
 					},
 					"partyId": {
 						"description": "PartyId",
@@ -138,7 +158,9 @@
 						"type": "string",
 						"example": "2021-12-31"
 					},
-					"status": {"$ref": "#/components/schemas/Status"}
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					}
 				}
 			},
 			"ThrowableProblem": {
@@ -148,68 +170,114 @@
 						"format": "uri",
 						"type": "string"
 					},
-					"localizedMessage": {"type": "string"},
-					"cause": {"$ref": "#/components/schemas/ThrowableProblem"},
+					"localizedMessage": {
+						"type": "string"
+					},
+					"cause": {
+						"$ref": "#/components/schemas/ThrowableProblem"
+					},
 					"stackTrace": {
 						"type": "array",
 						"items": {
 							"type": "object",
 							"properties": {
-								"fileName": {"type": "string"},
-								"moduleVersion": {"type": "string"},
-								"moduleName": {"type": "string"},
-								"nativeMethod": {"type": "boolean"},
-								"methodName": {"type": "string"},
-								"className": {"type": "string"},
+								"fileName": {
+									"type": "string"
+								},
+								"moduleVersion": {
+									"type": "string"
+								},
+								"moduleName": {
+									"type": "string"
+								},
+								"nativeMethod": {
+									"type": "boolean"
+								},
+								"methodName": {
+									"type": "string"
+								},
+								"className": {
+									"type": "string"
+								},
 								"lineNumber": {
 									"format": "int32",
 									"type": "integer"
 								},
-								"classLoaderName": {"type": "string"}
+								"classLoaderName": {
+									"type": "string"
+								}
 							}
 						}
 					},
-					"detail": {"type": "string"},
+					"detail": {
+						"type": "string"
+					},
 					"suppressed": {
 						"type": "array",
 						"items": {
 							"type": "object",
 							"properties": {
-								"localizedMessage": {"type": "string"},
+								"localizedMessage": {
+									"type": "string"
+								},
 								"stackTrace": {
 									"type": "array",
 									"items": {
 										"type": "object",
 										"properties": {
-											"fileName": {"type": "string"},
-											"moduleVersion": {"type": "string"},
-											"moduleName": {"type": "string"},
-											"nativeMethod": {"type": "boolean"},
-											"methodName": {"type": "string"},
-											"className": {"type": "string"},
+											"fileName": {
+												"type": "string"
+											},
+											"moduleVersion": {
+												"type": "string"
+											},
+											"moduleName": {
+												"type": "string"
+											},
+											"nativeMethod": {
+												"type": "boolean"
+											},
+											"methodName": {
+												"type": "string"
+											},
+											"className": {
+												"type": "string"
+											},
 											"lineNumber": {
 												"format": "int32",
 												"type": "integer"
 											},
-											"classLoaderName": {"type": "string"}
+											"classLoaderName": {
+												"type": "string"
+											}
 										}
 									}
 								},
-								"message": {"type": "string"}
+								"message": {
+									"type": "string"
+								}
 							}
 						}
 					},
-					"message": {"type": "string"},
+					"message": {
+						"type": "string"
+					},
 					"type": {
 						"format": "uri",
 						"type": "string"
 					},
-					"title": {"type": "string"},
+					"title": {
+						"type": "string"
+					},
 					"parameters": {
-						"additionalProperties": {"type": "object"},
+						"additionalProperties": {
+							"type": "object"
+						},
 						"type": "object"
 					},
-					"status": {"$ref": "#/components/schemas/StatusType"}
+					"status": {
+						"$ref": "#/components/schemas/StatusType"
+					}
 				}
 			},
 			"Asset": {
@@ -243,7 +311,9 @@
 							"example": "{\"foo\":\"bar\"}"
 						},
 						"type": "object",
-						"example": {"foo": "bar"}
+						"example": {
+							"foo": "bar"
+						}
 					},
 					"id": {
 						"description": "Unique id of asset",
@@ -258,7 +328,9 @@
 							"type": "string",
 							"example": "[\"945576d3-6e92-4118-ba33-53582d338ad3\"]"
 						},
-						"example": ["945576d3-6e92-4118-ba33-53582d338ad3"]
+						"example": [
+							"945576d3-6e92-4118-ba33-53582d338ad3"
+						]
 					},
 					"partyId": {
 						"description": "PartyId",
@@ -282,7 +354,9 @@
 						"type": "string",
 						"example": "2021-12-31"
 					},
-					"status": {"$ref": "#/components/schemas/Status"}
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					}
 				}
 			},
 			"Problem": {
@@ -292,17 +366,25 @@
 						"format": "uri",
 						"type": "string"
 					},
-					"detail": {"type": "string"},
+					"detail": {
+						"type": "string"
+					},
 					"type": {
 						"format": "uri",
 						"type": "string"
 					},
-					"title": {"type": "string"},
+					"title": {
+						"type": "string"
+					},
 					"parameters": {
-						"additionalProperties": {"type": "object"},
+						"additionalProperties": {
+							"type": "object"
+						},
 						"type": "object"
 					},
-					"status": {"$ref": "#/components/schemas/StatusType"}
+					"status": {
+						"$ref": "#/components/schemas/StatusType"
+					}
 				}
 			},
 			"ConstraintViolationProblem": {
@@ -312,58 +394,98 @@
 						"format": "uri",
 						"type": "string"
 					},
-					"localizedMessage": {"type": "string"},
+					"localizedMessage": {
+						"type": "string"
+					},
 					"violations": {
 						"type": "array",
-						"items": {"$ref": "#/components/schemas/Violation"}
+						"items": {
+							"$ref": "#/components/schemas/Violation"
+						}
 					},
-					"cause": {"$ref": "#/components/schemas/ThrowableProblem"},
+					"cause": {
+						"$ref": "#/components/schemas/ThrowableProblem"
+					},
 					"stackTrace": {
 						"type": "array",
 						"items": {
 							"type": "object",
 							"properties": {
-								"fileName": {"type": "string"},
-								"moduleVersion": {"type": "string"},
-								"moduleName": {"type": "string"},
-								"nativeMethod": {"type": "boolean"},
-								"methodName": {"type": "string"},
-								"className": {"type": "string"},
+								"fileName": {
+									"type": "string"
+								},
+								"moduleVersion": {
+									"type": "string"
+								},
+								"moduleName": {
+									"type": "string"
+								},
+								"nativeMethod": {
+									"type": "boolean"
+								},
+								"methodName": {
+									"type": "string"
+								},
+								"className": {
+									"type": "string"
+								},
 								"lineNumber": {
 									"format": "int32",
 									"type": "integer"
 								},
-								"classLoaderName": {"type": "string"}
+								"classLoaderName": {
+									"type": "string"
+								}
 							}
 						}
 					},
-					"detail": {"type": "string"},
+					"detail": {
+						"type": "string"
+					},
 					"suppressed": {
 						"type": "array",
 						"items": {
 							"type": "object",
 							"properties": {
-								"localizedMessage": {"type": "string"},
+								"localizedMessage": {
+									"type": "string"
+								},
 								"stackTrace": {
 									"type": "array",
 									"items": {
 										"type": "object",
 										"properties": {
-											"fileName": {"type": "string"},
-											"moduleVersion": {"type": "string"},
-											"moduleName": {"type": "string"},
-											"nativeMethod": {"type": "boolean"},
-											"methodName": {"type": "string"},
-											"className": {"type": "string"},
+											"fileName": {
+												"type": "string"
+											},
+											"moduleVersion": {
+												"type": "string"
+											},
+											"moduleName": {
+												"type": "string"
+											},
+											"nativeMethod": {
+												"type": "boolean"
+											},
+											"methodName": {
+												"type": "string"
+											},
+											"className": {
+												"type": "string"
+											},
 											"lineNumber": {
 												"format": "int32",
 												"type": "integer"
 											},
-											"classLoaderName": {"type": "string"}
+											"classLoaderName": {
+												"type": "string"
+											}
 										}
 									}
 								},
-								"message": {"type": "string"}
+								"message": {
+									"type": "string"
+								}
 							}
 						}
 					},
@@ -371,61 +493,115 @@
 						"format": "uri",
 						"type": "string"
 					},
-					"title": {"type": "string"},
-					"message": {"type": "string"},
+					"title": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
 					"parameters": {
-						"additionalProperties": {"type": "object"},
+						"additionalProperties": {
+							"type": "object"
+						},
 						"type": "object"
 					},
-					"status": {"$ref": "#/components/schemas/StatusType"}
+					"status": {
+						"$ref": "#/components/schemas/StatusType"
+					}
 				}
 			}
 		},
-		"securitySchemes": {"default": {
-			"flows": {"implicit": {
-				"authorizationUrl": "https://api-i-test.sundsvall.se/authorize",
-				"scopes": {}
-			}},
-			"type": "oauth2"
-		}}
+		"securitySchemes": {
+			"default": {
+				"flows": {
+					"implicit": {
+						"authorizationUrl": "https://api-i-test.sundsvall.se/authorize",
+						"scopes": {}
+					}
+				},
+				"type": "oauth2"
+			}
+		}
 	},
-	"servers": [{"url": "https://api-i-test.sundsvall.se/partyassets/1.0"}],
+	"servers": [
+		{
+			"url": "https://api-i-test.sundsvall.se/partyassets/1.0"
+		}
+	],
 	"openapi": "3.0.1",
 	"paths": {
 		"/assets/{id}": {
 			"delete": {
-				"security": [{"default": []}],
+				"security": [
+					{
+						"default": []
+					}
+				],
 				"x-auth-type": "Application & Application User",
 				"operationId": "deleteAsset",
 				"responses": {
 					"400": {
 						"description": "Bad Request",
-						"content": {"application/problem+json": {"schema": {"oneOf": [
-							{"$ref": "#/components/schemas/Problem"},
-							{"$ref": "#/components/schemas/ConstraintViolationProblem"}
-						]}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"oneOf": [
+										{
+											"$ref": "#/components/schemas/Problem"
+										},
+										{
+											"$ref": "#/components/schemas/ConstraintViolationProblem"
+										}
+									]
+								}
+							}
+						}
 					},
 					"500": {
 						"description": "Internal Server Error",
-						"content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/Problem"}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
 					},
-					"204": {"description": "No content - Successful operation"}
+					"204": {
+						"description": "No content - Successful operation"
+					}
 				},
-				"parameters": [{
-					"schema": {"type": "string"},
-					"in": "path",
-					"explode": false,
-					"name": "id",
-					"style": "simple",
-					"required": true
-				}],
+				"parameters": [
+					{
+						"schema": {
+							"type": "string"
+						},
+						"in": "path",
+						"explode": false,
+						"name": "id",
+						"style": "simple",
+						"required": true
+					}
+				],
 				"x-throttling-tier": "Unlimited",
-				"tags": ["Assets"]
+				"tags": [
+					"Assets"
+				]
 			},
 			"put": {
-				"security": [{"default": []}],
+				"security": [
+					{
+						"default": []
+					}
+				],
 				"requestBody": {
-					"content": {"application/json": {"schema": {"$ref": "#/components/schemas/AssetUpdateRequest"}}},
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AssetUpdateRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"x-auth-type": "Application & Application User",
@@ -433,98 +609,194 @@
 				"responses": {
 					"400": {
 						"description": "Bad Request",
-						"content": {"application/problem+json": {"schema": {"oneOf": [
-							{"$ref": "#/components/schemas/Problem"},
-							{"$ref": "#/components/schemas/ConstraintViolationProblem"}
-						]}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"oneOf": [
+										{
+											"$ref": "#/components/schemas/Problem"
+										},
+										{
+											"$ref": "#/components/schemas/ConstraintViolationProblem"
+										}
+									]
+								}
+							}
+						}
 					},
 					"500": {
 						"description": "Internal Server Error",
-						"content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/Problem"}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
 					},
-					"204": {"description": "No content - Successful operation"},
+					"204": {
+						"description": "No content - Successful operation"
+					},
 					"404": {
 						"description": "Not Found",
-						"content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/Problem"}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
 					}
 				},
-				"parameters": [{
-					"schema": {"type": "string"},
-					"in": "path",
-					"explode": false,
-					"name": "id",
-					"style": "simple",
-					"required": true
-				}],
+				"parameters": [
+					{
+						"schema": {
+							"type": "string"
+						},
+						"in": "path",
+						"explode": false,
+						"name": "id",
+						"style": "simple",
+						"required": true
+					}
+				],
 				"x-throttling-tier": "Unlimited",
-				"tags": ["Assets"]
+				"tags": [
+					"Assets"
+				]
 			}
 		},
 		"/assets": {
 			"post": {
-				"security": [{"default": []}],
+				"security": [
+					{
+						"default": []
+					}
+				],
 				"requestBody": {
-					"content": {"application/json": {"schema": {"$ref": "#/components/schemas/AssetCreateRequest"}}},
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AssetCreateRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"x-auth-type": "Application & Application User",
 				"operationId": "createAsset",
 				"responses": {
 					"201": {
-						"headers": {"Location": {
-							"explode": false,
-							"description": "Location of the created resource.",
-							"style": "simple"
-						}},
+						"headers": {
+							"Location": {
+								"explode": false,
+								"description": "Location of the created resource.",
+								"style": "simple"
+							}
+						},
 						"description": "Created - Successful operation",
 						"content": {
-							"*/*": {"schema": {"type": "string"}},
-							"application/problem+json": {"schema": {"type": "string"}}
+							"*/*": {
+								"schema": {
+									"type": "string"
+								}
+							},
+							"application/problem+json": {
+								"schema": {
+									"type": "string"
+								}
+							}
 						}
 					},
 					"400": {
 						"description": "Bad Request",
-						"content": {"application/problem+json": {"schema": {"oneOf": [
-							{"$ref": "#/components/schemas/Problem"},
-							{"$ref": "#/components/schemas/ConstraintViolationProblem"}
-						]}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"oneOf": [
+										{
+											"$ref": "#/components/schemas/Problem"
+										},
+										{
+											"$ref": "#/components/schemas/ConstraintViolationProblem"
+										}
+									]
+								}
+							}
+						}
 					},
 					"500": {
 						"description": "Internal Server Error",
-						"content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/Problem"}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
 					}
 				},
 				"x-throttling-tier": "Unlimited",
-				"tags": ["Assets"]
+				"tags": [
+					"Assets"
+				]
 			},
 			"get": {
-				"security": [{"default": []}],
+				"security": [
+					{
+						"default": []
+					}
+				],
 				"x-auth-type": "Application & Application User",
 				"operationId": "getAssets",
 				"responses": {
 					"200": {
 						"description": "OK",
 						"content": {
-							"application/json": {"schema": {
-								"type": "array",
-								"items": {"$ref": "#/components/schemas/Asset"}
-							}},
-							"application/problem+json": {"schema": {
-								"type": "array",
-								"items": {"$ref": "#/components/schemas/Asset"}
-							}}
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Asset"
+									}
+								}
+							},
+							"application/problem+json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Asset"
+									}
+								}
+							}
 						}
 					},
 					"400": {
 						"description": "Bad Request",
-						"content": {"application/problem+json": {"schema": {"oneOf": [
-							{"$ref": "#/components/schemas/Problem"},
-							{"$ref": "#/components/schemas/ConstraintViolationProblem"}
-						]}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"oneOf": [
+										{
+											"$ref": "#/components/schemas/Problem"
+										},
+										{
+											"$ref": "#/components/schemas/ConstraintViolationProblem"
+										}
+									]
+								}
+							}
+						}
 					},
 					"500": {
 						"description": "Internal Server Error",
-						"content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/Problem"}}}
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/Problem"
+								}
+							}
+						}
 					}
 				},
 				"parameters": [
@@ -656,22 +928,40 @@
 					}
 				],
 				"x-throttling-tier": "Unlimited",
-				"tags": ["Assets"]
+				"tags": [
+					"Assets"
+				]
 			}
 		},
-		"/api-docs": {"get": {
-			"summary": "OpenAPI",
-			"security": [{"default": []}],
-			"x-auth-type": "None",
-			"operationId": "getApiDocs",
-			"responses": {"200": {
-				"description": "OK",
-				"content": {"application/yaml": {"schema": {"type": "string"}}}
-			}},
-			"x-wso2-mutual-ssl": "Optional",
-			"x-throttling-tier": "Unlimited",
-			"tags": ["API"]
-		}}
+		"/api-docs": {
+			"get": {
+				"summary": "OpenAPI",
+				"security": [
+					{
+						"default": []
+					}
+				],
+				"x-auth-type": "None",
+				"operationId": "getApiDocs",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/yaml": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"x-wso2-mutual-ssl": "Optional",
+				"x-throttling-tier": "Unlimited",
+				"tags": [
+					"API"
+				]
+			}
+		}
 	},
 	"info": {
 		"license": {

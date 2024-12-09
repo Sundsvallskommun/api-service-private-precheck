@@ -4,7 +4,9 @@
 		"urlPath": "/citizen/2927622b-6540-431f-9841-4cb15fe8e2d6"
 	},
 	"response": {
-		"headers": {"Content-Type": "application/json"},
+		"headers": {
+			"Content-Type": "application/json"
+		},
 		"bodyFileName": "test2_getSpecificAssetType/responses/citizen_response.json",
 		"status": 200
 	}
