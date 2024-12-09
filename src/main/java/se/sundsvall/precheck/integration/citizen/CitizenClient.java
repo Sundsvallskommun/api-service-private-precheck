@@ -2,11 +2,10 @@ package se.sundsvall.precheck.integration.citizen;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import generated.client.citizen.CitizenExtended;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import generated.client.citizen.CitizenExtended;
 import se.sundsvall.precheck.integration.citizen.configuration.CitizenConfiguration;
 
 @FeignClient(name = CitizenConfiguration.CLIENT_ID, url = "${integration.citizen.url}", configuration = CitizenConfiguration.class)

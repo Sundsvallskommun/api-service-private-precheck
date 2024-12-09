@@ -6,18 +6,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import generated.client.citizen.CitizenAddress;
+import generated.client.citizen.CitizenExtended;
+import generated.client.partyassets.Asset;
 import java.util.List;
 import java.util.UUID;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import generated.client.citizen.CitizenAddress;
-import generated.client.citizen.CitizenExtended;
-import generated.client.partyassets.Asset;
 import se.sundsvall.precheck.integration.citizen.CitizenClient;
 import se.sundsvall.precheck.integration.partyassets.PartyAssetsClient;
 

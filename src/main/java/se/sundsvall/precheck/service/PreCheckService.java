@@ -5,7 +5,6 @@ import static se.sundsvall.precheck.service.mapper.PreCheckMapper.toPermits;
 import static se.sundsvall.precheck.service.utils.PreCheckUtil.isCitizenOfMunicipality;
 
 import org.springframework.stereotype.Service;
-
 import se.sundsvall.precheck.api.model.PreCheckResponse;
 import se.sundsvall.precheck.integration.citizen.CitizenClient;
 import se.sundsvall.precheck.integration.partyassets.PartyAssetsClient;

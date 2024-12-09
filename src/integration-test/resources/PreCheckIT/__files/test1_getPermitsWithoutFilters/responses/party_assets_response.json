@@ -5,7 +5,9 @@
 		"description": "Parkeringstillstånd",
 		"additionalParameters": {},
 		"id": "d1d87cda-0dc5-41bb-9dd9-fa6ed2fd52ee",
-		"caseReferenceIds": ["404"],
+		"caseReferenceIds": [
+			"404"
+		],
 		"partyId": "2927622b-6540-431f-9841-4cb15fe8e2d6",
 		"type": "PARKING_PERMIT",
 		"issued": "2023-11-23",
@@ -15,9 +17,13 @@
 		"assetId": "PRH-123458789",
 		"origin": "CASEDATA",
 		"description": "Alkoholtillstånd",
-		"additionalParameters": {"bar": "foo"},
+		"additionalParameters": {
+			"bar": "foo"
+		},
 		"id": "685fa85f-9016-404c-b942-2188e9075161",
-		"caseReferenceIds": ["123e4567-e89b-12d3-a456-426614174000"],
+		"caseReferenceIds": [
+			"123e4567-e89b-12d3-a456-426614174000"
+		],
 		"partyId": "2927622b-6540-431f-9841-4cb15fe8e2d6",
 		"type": "ALKT_PERMIT",
 		"issued": "2021-01-01",
@@ -29,9 +35,13 @@
 		"assetId": "PRH-123456789",
 		"origin": "CASEDATA",
 		"description": "Asset description",
-		"additionalParameters": {"foo": "bar"},
+		"additionalParameters": {
+			"foo": "bar"
+		},
 		"id": "6f163734-25d3-4117-aca3-96ced2363c83",
-		"caseReferenceIds": ["123e4567-e89b-12d3-a456-426614174000"],
+		"caseReferenceIds": [
+			"123e4567-e89b-12d3-a456-426614174000"
+		],
 		"partyId": "2927622b-6540-431f-9841-4cb15fe8e2d6",
 		"type": "OTHER_PERMIT",
 		"issued": "2021-01-01",
