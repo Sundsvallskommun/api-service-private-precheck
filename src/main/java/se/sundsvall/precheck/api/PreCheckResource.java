@@ -33,16 +33,17 @@ public class PreCheckResource {
 
 	private final PreCheckService preCheckService;
 
-	public PreCheckResource(PreCheckService preCheckService) {
+	public PreCheckResource(final PreCheckService preCheckService) {
 		this.preCheckService = preCheckService;
 	}
 
 	@GetMapping(path = "/{partyId}", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
-	@Operation(summary = "Fetch permit(s) issued by the provided municipality to the citizen matching the provided partyId")
-	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
-	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	@Operation(summary = "Fetch permit(s) issued by the provided municipality to the citizen matching the provided partyId", responses = {
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
 	public ResponseEntity<PreCheckResponse> fetchPermits(
 		@Parameter(name = "partyId", description = "PartyId for the citizen", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6") @PathVariable @ValidUuid final String partyId,
 		@Parameter(name = "municipalityId", description = "MunicipalityId for the citizen", example = "2281") @RequestParam @ValidMunicipalityId final String municipalityId,
