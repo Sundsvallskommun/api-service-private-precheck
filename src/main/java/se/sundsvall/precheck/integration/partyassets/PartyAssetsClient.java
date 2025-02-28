@@ -1,5 +1,6 @@
 package se.sundsvall.precheck.integration.partyassets;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static se.sundsvall.precheck.integration.partyassets.configuration.PartyAssetsConfiguration.CLIENT_ID;
 
 import generated.client.partyassets.Asset;
@@ -23,7 +24,7 @@ public interface PartyAssetsClient {
 	 * @return                                      An object with a list of assets.
 	 * @throws org.zalando.problem.ThrowableProblem when called service responds with error code.
 	 */
-	@GetMapping(path = "/{municipalityId}/assets", produces = "application/json")
+	@GetMapping(path = "/{municipalityId}/assets", produces = APPLICATION_JSON_VALUE)
 	List<Asset> getPartyAssets(
 		@PathVariable(name = "municipalityId") String municipalityId,
 		@RequestParam(name = "partyId") String partyId,
