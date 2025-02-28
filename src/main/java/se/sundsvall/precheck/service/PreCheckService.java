@@ -15,14 +15,14 @@ public final class PreCheckService {
 	private final CitizenClient citizenClient;
 	private final PartyAssetsClient partyAssetsClient;
 
-	public PreCheckService(CitizenClient citizenClient, PartyAssetsClient partyAssetsClient) {
+	public PreCheckService(final CitizenClient citizenClient, final PartyAssetsClient partyAssetsClient) {
 		this.citizenClient = citizenClient;
 		this.partyAssetsClient = partyAssetsClient;
 	}
 
-	public PreCheckResponse fetchPermits(String partyId, String municipalityId, final String assetType) {
-		final var citizen = citizenClient.getCitizen(partyId);
-		final var partyAssets = partyAssetsClient.getPartyAssets(partyId, ACTIVE);
+	public PreCheckResponse fetchPermits(final String partyId, final String municipalityId, final String assetType) {
+		final var citizen = citizenClient.getCitizen(municipalityId, partyId);
+		final var partyAssets = partyAssetsClient.getPartyAssets(municipalityId, partyId, ACTIVE);
 
 		return PreCheckResponse.builder()
 			.withMunicipalCitizen(isCitizenOfMunicipality(citizen, municipalityId))

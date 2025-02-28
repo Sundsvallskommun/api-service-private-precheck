@@ -37,12 +37,12 @@ class PreCheckServiceTest {
 		final var municipalityId = "municipalityId";
 		final var assetType = "assetType";
 
-		when(citizenClientMock.getCitizen(partyId)).thenReturn(
+		when(citizenClientMock.getCitizen(municipalityId, partyId)).thenReturn(
 			new CitizenExtended().addAddressesItem(
 				new CitizenAddress()
 					.addressType("POPULATION_REGISTRATION_ADDRESS")
 					.municipality(municipalityId)));
-		when(partyAssetClientMock.getPartyAssets(partyId, ACTIVE)).thenReturn(List.of(new Asset().type(assetType)));
+		when(partyAssetClientMock.getPartyAssets(municipalityId, partyId, ACTIVE)).thenReturn(List.of(new Asset().type(assetType)));
 
 		final var result = preCheckService.fetchPermits(partyId, municipalityId, assetType);
 
@@ -50,8 +50,8 @@ class PreCheckServiceTest {
 		assertThat(result.isMunicipalCitizen()).isTrue();
 		assertThat(result.getPermits()).hasSize(1);
 
-		verify(citizenClientMock).getCitizen(partyId);
-		verify(partyAssetClientMock).getPartyAssets(partyId, ACTIVE);
+		verify(citizenClientMock).getCitizen(municipalityId, partyId);
+		verify(partyAssetClientMock).getPartyAssets(municipalityId, partyId, ACTIVE);
 		verifyNoMoreInteractions(citizenClientMock, partyAssetClientMock);
 	}
 
