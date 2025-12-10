@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Permit model.", accessMode = READ_ONLY)
 public class Permit {
 
-	@Schema(description = "The type of permit.", example = "PARKING_PERMIT", accessMode = READ_ONLY)
+	@Schema(description = "The type of permit.", examples = "PARKING_PERMIT", accessMode = READ_ONLY)
 	private String type;
 
 	@Schema(description = "If the permit is orderable or not.", accessMode = READ_ONLY)
