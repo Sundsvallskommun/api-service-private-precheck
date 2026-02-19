@@ -1,8 +1,5 @@
 package se.sundsvall.precheck.integration.partyassets;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static se.sundsvall.precheck.integration.partyassets.configuration.PartyAssetsConfiguration.CLIENT_ID;
-
 import generated.client.partyassets.Asset;
 import generated.client.partyassets.Status;
 import java.util.List;
@@ -11,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.precheck.integration.partyassets.configuration.PartyAssetsConfiguration;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static se.sundsvall.precheck.integration.partyassets.configuration.PartyAssetsConfiguration.CLIENT_ID;
 
 @FeignClient(value = CLIENT_ID, url = "${integration.party-assets.url}", configuration = PartyAssetsConfiguration.class, dismiss404 = true)
 public interface PartyAssetsClient {

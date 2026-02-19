@@ -1,11 +1,5 @@
 package se.sundsvall.precheck.service;
 
-import static generated.client.partyassets.Status.ACTIVE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import generated.client.citizen.CitizenAddress;
 import generated.client.citizen.CitizenExtended;
 import generated.client.partyassets.Asset;
@@ -18,6 +12,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.precheck.integration.citizen.CitizenClient;
 import se.sundsvall.precheck.integration.partyassets.PartyAssetsClient;
+
+import static generated.client.partyassets.Status.ACTIVE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PreCheckServiceTest {
