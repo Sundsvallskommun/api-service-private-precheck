@@ -1,17 +1,17 @@
 integration:
   citizen:
-    url: http://localhost:${wiremock.server.port}/citizen
+    url: http://localhost:${wiremock.server.port:}/citizen
   party-assets:
-    url: http://localhost:${wiremock.server.port}/party-assets
+    url: http://localhost:${wiremock.server.port:}/party-assets
 spring:
   security:
     oauth2:
       client:
         provider:
           citizen:
-            token-uri: http://localhost:${wiremock.server.port}/token
+            token-uri: http://localhost:${wiremock.server.port:}/token
           party-assets:
-            token-uri: http://localhost:${wiremock.server.port}/token
+            token-uri: http://localhost:${wiremock.server.port:}/token
         registration:
           citizen:
             client-id: the-client-id
