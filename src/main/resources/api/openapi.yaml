@@ -1,48 +1,48 @@
 openapi: 3.1.0
 info:
   title: api-private-precheck
-  contact: { }
+  contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "0.5"
 servers:
-  - url: http://localhost:52038
-    description: Generated server url
+- url: http://localhost:55078
+  description: Generated server url
 tags:
-  - name: Pre-check
-    description: Pre-check operations
+- name: Pre-check
+  description: Pre-check operations
 paths:
   /precheck/{partyId}:
     get:
       tags:
-        - Pre-check
+      - Pre-check
       summary: Fetch permit(s) issued by the provided municipality to the citizen
         matching the provided partyId
       operationId: fetchPermits
       parameters:
-        - name: partyId
-          in: path
-          description: PartyId for the citizen
-          required: true
-          schema:
-            type: string
-          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        - name: municipalityId
-          in: query
-          description: MunicipalityId for the citizen
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: assetType
-          in: query
-          description: AssetType to filter on (optional)
-          required: false
-          allowEmptyValue: true
-          schema:
-            type: string
-          example: PARKING_PERMIT
+      - name: partyId
+        in: path
+        description: PartyId for the citizen
+        required: true
+        schema:
+          type: string
+        example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      - name: municipalityId
+        in: query
+        description: MunicipalityId for the citizen
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: assetType
+        in: query
+        description: AssetType to filter on (optional)
+        required: false
+        allowEmptyValue: true
+        schema:
+          type: string
+        example: PARKING_PERMIT
       responses:
         "200":
           description: Successful operation
@@ -65,8 +65,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -76,7 +76,7 @@ paths:
   /api-docs:
     get:
       tags:
-        - API
+      - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -122,10 +122,10 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        detail:
-          type: string
         causeAsProblem:
           $ref: "#/components/schemas/ThrowableProblem"
+        detail:
+          type: string
         instance:
           type: string
           format: uri
@@ -145,7 +145,7 @@ components:
         instance:
           type: string
           format: uri
-        causeAsProblem: { }
+        causeAsProblem: {}
     Violation:
       type: object
       properties:
@@ -161,7 +161,7 @@ components:
           type: string
           description: The type of permit.
           examples:
-            - PARKING_PERMIT
+          - PARKING_PERMIT
           readOnly: true
         orderable:
           type: boolean
@@ -188,4 +188,4 @@ components:
             $ref: "#/components/schemas/Permit"
           readOnly: true
       readOnly: true
-  securitySchemes: { }
+  securitySchemes: {}
